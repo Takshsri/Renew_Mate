@@ -1,4 +1,4 @@
-export default function EditSubscriptionForm() {
+export default function AddSubscriptionForm() {
   return (
     <form className="bg-white p-6 rounded-xl shadow flex flex-col gap-4 max-w-lg">
 
@@ -20,9 +20,9 @@ export default function EditSubscriptionForm() {
       />
 
       <button
-        className="bg-green-600 text-white p-3 rounded hover:bg-green-700"
+        className="bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
       >
-        Update Subscription
+        Add Subscription
       </button>
 
     </form>
