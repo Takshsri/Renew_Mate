@@ -1,7 +1,41 @@
-import { Link } from "react-router-dom";
 import logoImage from "../../../images/dashboard.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { API_URL } from "../api/api";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch(`${API_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("token", data.access_token);
+      navigate("/dashboard");
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Login failed");
+  }
+};
+
+const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] selection:bg-blue-100 selection:text-blue-700 p-6">
       
@@ -48,14 +82,16 @@ export default function Login() {
             <span className="bg-white px-4 text-xs font-bold text-slate-400 uppercase tracking-widest absolute">or</span>
           </div>
 
-          <form className="flex flex-col gap-5">
-            <div className="flex flex-col gap-1.5">
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">   
+                     <div className="flex flex-col gap-1.5">
               <label className="text-sm font-bold text-slate-700 ml-1">Email address</label>
-              <input
-                type="email"
-                placeholder="name@company.com"
-                className="w-full bg-slate-50/50 border border-slate-200 p-4 rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400"
-              />
+                        <input
+            type="email"
+            placeholder="name@company.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full bg-slate-50/50 border border-slate-200 p-4 rounded-2xl"
+          />
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -64,10 +100,12 @@ export default function Login() {
                 <Link to="/forgot" className="text-xs font-bold text-blue-600 hover:text-blue-700">Forgot password?</Link>
               </div>
               <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full bg-slate-50/50 border border-slate-200 p-4 rounded-2xl outline-none focus:ring-4 focus:ring-blue-50 focus:border-blue-500 transition-all text-slate-900 placeholder:text-slate-400"
-              />
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-slate-50/50 border border-slate-200 p-4 rounded-2xl"
+/>
             </div>
 
             <button className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl font-bold shadow-lg shadow-blue-100 transition-all active:scale-[0.98] mt-2">

@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -6,23 +7,59 @@ import Dashboard from "./pages/Dashboard";
 import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import Profile from "./pages/Profile";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
 
-     <Routes>
+      <Routes>
 
-  <Route path="/" element={<Home />} />
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-  <Route path="/login" element={<Login />} />
-  <Route path="/register" element={<Register />} />
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-  <Route path="/dashboard" element={<Dashboard />} />
-  <Route path="/subscriptions" element={<Subscriptions />} />
-  <Route path="/add-subscription" element={<AddSubscription />} />
-  <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/subscriptions"
+          element={
+            <ProtectedRoute>
+              <Subscriptions />
+            </ProtectedRoute>
+          }
+        />
 
-</Routes>
+        <Route
+          path="/add-subscription"
+          element={
+            <ProtectedRoute>
+              <AddSubscription />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+
     </BrowserRouter>
   );
 }
