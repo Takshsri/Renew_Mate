@@ -5,12 +5,9 @@ const BOT_ICON_URL = "https://cdn-icons-png.flaticon.com/512/8943/8943377.png";
 
 export default function Chatbot() {
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([
-    { role: "user", text: "hi" },
-    { role: "bot", text: "How can I help you today?" },
-    { role: "user", text: "i am stuck in building project" },
-    { role: "bot", text: "Building projects can be complex and challenging. To help you get unstuck, I'll need more information about your project. Please provide me with some details: 1. **What type of project are you working on?** (e.g., house, commercial building, renovation, remodeling) 2. **What's the current status of your project?" }
-  ]);
+ const [chat, setChat] = useState([
+  { role: "bot", text: "Hi! I can help you manage subscriptions. Try: 'Add Spotify 119 monthly' or 'Show my subscriptions'." }
+]);
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef(null);
@@ -42,29 +39,62 @@ export default function Chatbot() {
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [chat, isLoading]);
+const sendMessage = async () => {
 
-  const sendMessage = async () => {
-    if (!message.trim() || isLoading) return;
-    const userMessage = { role: "user", text: message };
-    setChat((prev) => [...prev, userMessage]);
-    setMessage("");
-    setIsLoading(true);
+  if (!message.trim() || isLoading) return;
 
-    try {
-      const res = await fetch("http://localhost:3000/ai/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage.text })
-      });
-      const data = await res.json();
-      setChat((prev) => [...prev, { role: "bot", text: data.reply || "Error." }]);
-    } catch (err) {
-      setChat((prev) => [...prev, { role: "bot", text: "Connection failed." }]);
-    } finally {
-      setIsLoading(false);
+  const userMessage = { role: "user", text: message };
+
+  setChat((prev) => [...prev, userMessage]);
+  setMessage("");
+  setIsLoading(true);
+
+  try {
+
+    const res = await fetch("http://localhost:3000/ai/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify({
+        message: userMessage.text
+      })
+    });
+
+    const data = await res.json();
+
+    let botReply = data.message || "Request completed.";
+
+    // If backend returned subscriptions, show them
+    if (data.subscriptions && data.subscriptions.length > 0) {
+
+      const list = data.subscriptions
+        .map(sub => `${sub.serviceName} - ₹${sub.price}`)
+        .join("\n");
+
+      botReply = `${botReply}\n\n${list}`;
     }
-  };
 
+    setChat((prev) => [
+      ...prev,
+      { role: "bot", text: botReply }
+    ]);
+
+  } catch (err) {
+
+    setChat((prev) => [
+      ...prev,
+      { role: "bot", text: "Connection failed." }
+    ]);
+
+  } finally {
+
+    setIsLoading(false);
+
+  }
+
+};
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#0a0a0f] p-4 font-sans text-slate-200">
       <div className="w-full max-w-md h-[600px] flex flex-col bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">

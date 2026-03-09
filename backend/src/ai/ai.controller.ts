@@ -15,7 +15,15 @@ export class AiController {
 async chat(@Req() req, @Body() body: any) {
 
   const userId = req.user.sub;
+  const userMessage = body.message.toLowerCase();
 
+  const greetings = ["hi", "hello", "hey", "good morning", "good evening"];
+
+  if (greetings.includes(userMessage)) {
+    return {
+      message: "Hello! I can help you manage subscriptions. Try 'Add Netflix monthly 499' or 'Show my subscriptions'."
+    };
+  }
   const aiResponse = await this.aiService.extractSubscription(body.message);
 
   let cleaned = aiResponse

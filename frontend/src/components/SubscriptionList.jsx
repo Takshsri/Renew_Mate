@@ -1,23 +1,74 @@
-import SubscriptionCard from "./SubscriptionCard";
+import { useEffect, useState } from "react";
+import { API_URL } from "../api/api";
 
 export default function SubscriptionList() {
 
-  const subscriptions = [
-    { id: 1, name: "Netflix", price: 649, renewal: "10 July" },
-    { id: 2, name: "Spotify", price: 119, renewal: "15 July" },
-    { id: 3, name: "Amazon Prime", price: 1499, renewal: "20 July" },
-  ];
+  const [subscriptions, setSubscriptions] = useState([]);
+
+  useEffect(() => {
+
+    const fetchSubscriptions = async () => {
+
+      try {
+
+        const res = await fetch(`${API_URL}/subscriptions`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          setSubscriptions(data);
+        }
+
+      } catch (error) {
+        console.error("Error fetching subscriptions:", error);
+      }
+
+    };
+
+    fetchSubscriptions();
+
+  }, []);
+
+  if (!subscriptions.length) {
+    return (
+      <div className="p-8 text-center text-slate-500">
+        No subscriptions found
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
 
       {subscriptions.map((sub) => (
-        <SubscriptionCard
+
+        <div
           key={sub.id}
-          name={sub.name}
-          price={sub.price}
-          renewal={sub.renewal}
-        />
+          className="bg-[#0f0f14] border border-white/10 rounded-2xl p-5 hover:border-cyan-400/40 transition"
+        >
+
+          <h3 className="text-lg font-bold text-white">
+            {sub.serviceName}
+          </h3>
+
+          <p className="text-sm text-slate-400 mt-2">
+            Price: ₹{sub.price}
+          </p>
+
+          <p className="text-sm text-slate-400">
+            Billing: {sub.billingCycle}
+          </p>
+
+          <p className="text-sm text-slate-400">
+            Renewal: {new Date(sub.renewalDate).toLocaleDateString()}
+          </p>
+
+        </div>
+
       ))}
 
     </div>

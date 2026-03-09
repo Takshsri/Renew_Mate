@@ -32,7 +32,22 @@ export class UsersService {
       }
     });
   }
+async updateProfile(userId: string, data: any) {
 
+  return this.prisma.user.update({
+    where: { id: userId },
+    data,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      createdAt: true
+    }
+  });
+
+}
   async deleteUser(id: string) {
     return this.prisma.user.delete({
       where: { id }

@@ -6,11 +6,12 @@ import { API_URL } from "../api/api";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
 
   try {
-    const res = await fetch("http://localhost:3000/auth/login", {
+
+    const res = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -24,17 +25,24 @@ export default function Login() {
     const data = await res.json();
 
     if (res.ok) {
+
       localStorage.setItem("token", data.access_token);
+
       navigate("/dashboard");
+
     } else {
-      alert(data.message);
+
+      alert(Array.isArray(data.message) ? data.message[0] : data.message);
+
     }
+
   } catch (error) {
+
     console.error(error);
     alert("Login failed");
+
   }
 };
-
 const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] selection:bg-blue-100 selection:text-blue-700 p-6">

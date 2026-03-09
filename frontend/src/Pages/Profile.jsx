@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { Menu, X, User, Mail, Phone, Lock, ShieldCheck, Save } from "lucide-react";
@@ -7,18 +7,75 @@ export default function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Example state for the form
+  useEffect(() => {
+
+  const fetchProfile = async () => {
+
+    try {
+
+      const res = await fetch("http://localhost:3000/users/profile", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+
+      const data = await res.json();
+
+      setFormData({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        phone: data.phone
+      });
+
+    } catch (error) {
+      console.error("Failed to load profile");
+    }
+
+  };
+
+  fetchProfile();
+
+}, []);
   const [formData, setFormData] = useState({
-    firstName: "Maya",
-    lastName: "Zen",
-    email: "maya@email.com",
-    phone: "+1 (555) 000-1234",
-    password: "**************"
-  });
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  password: ""
+});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+const handleSubmit = async (e) => {
 
+  e.preventDefault();
+
+  try {
+
+    const res = await fetch("http://localhost:3000/users/profile", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const data = await res.json();
+
+    if(res.ok){
+      alert("Profile updated successfully");
+    }else{
+      alert(data.message);
+    }
+
+  } catch (error) {
+    alert("Update failed");
+  }
+
+};
   return (
     <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans overflow-x-hidden">
       
@@ -103,8 +160,8 @@ export default function Profile() {
 
               {/* Right Column: Edit Form */}
               <div className="lg:col-span-2 bg-white/5 backdrop-blur-md border border-white/10 p-6 sm:p-10 rounded-3xl shadow-2xl">
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {/* First Name */}
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">First Name</label>
