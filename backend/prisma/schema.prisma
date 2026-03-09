@@ -5,15 +5,53 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-
 }
 
 model User {
-  id        String   @id @default(uuid())
-  firstName String
-  lastName  String
-  email     String   @unique
-  password  String
-  phone     String
-  createdAt DateTime @default(now())
+  id            String         @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  phone         String
+  createdAt     DateTime       @default(now())
+
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id            String   @id @default(uuid())
+  serviceName   String
+  price         Float
+  billingCycle  BillingCycle
+  startDate     DateTime
+  renewalDate   DateTime
+  status        SubscriptionStatus @default(ACTIVE)
+
+  createdAt     DateTime @default(now())
+
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+
+  reminders     Reminder[]
+}
+
+model Reminder {
+  id             String   @id @default(uuid())
+  reminderDate   DateTime
+  sent           Boolean  @default(false)
+
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+  WEEKLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
 }
