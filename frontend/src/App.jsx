@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import Demo from "./pages/Demo";
 
 import Loader from "./components/Loader";
 import Home from "./pages/Home";
@@ -20,7 +21,7 @@ function AppRoutes() {
 
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 800); // loader time
+    }, 1000); // loader time
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/demo" element={<Demo />} />
 
         {/* Protected */}
         <Route

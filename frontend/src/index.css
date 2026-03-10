@@ -1,118 +1,130 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --cosmic-bg: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+  --accent-cyan: #38bdf8;
+  --accent-purple: #818cf8;
+}
+
+/* 1. Container Setup */
 .loader-container {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100vh;
-  background: radial-gradient(circle at center, #0f172a, #020617);
+  background: var(--cosmic-bg);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  overflow: hidden;
 }
 
-.loader-content {
-  text-align: center;
+/* 2. The Spinner & Logo Area */
+.loader-circle {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Outer Orbital Ring (The "Comet" Effect) */
+.spinner-outer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top: 3px solid var(--accent-cyan);
+  border-right: 1px solid var(--accent-cyan);
+  animation: spin 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
+  filter: drop-shadow(0 0 10px var(--accent-cyan));
+}
+
+/* Inner Orbital Ring (Slow Reverse) */
+.spinner-inner {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  border-bottom: 2px solid var(--accent-purple);
+  animation: spin-reverse 2.5s linear infinite;
+  opacity: 0.5;
+}
+
+/* Glassmorphism Logo Wrapper */
+.logo-wrapper {
+  width: 110px;
+  height: 110px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.15);
+  z-index: 10;
 }
 
 .loader-logo {
-  width: 120px;
-  animation: pulse 2s infinite ease-in-out, rotate 6s linear infinite;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  /* Glowing Pulse Animation */
+  animation: logo-glow 2s infinite ease-in-out;
 }
 
+/* 3. Text Styling */
 .loader-text {
-  color: white;
-  margin-top: 15px;
-  font-size: 18px;
-  letter-spacing: 1px;
+  margin-top: 35px;
+  color: #f8fafc;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  animation: text-fade 2s infinite ease-in-out;
 }
 
-@keyframes pulse {
-  0% {
+/* 4. Animations */
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+@keyframes logo-glow {
+  0%, 100% { 
     transform: scale(1);
-    filter: drop-shadow(0 0 5px #38bdf8);
+    filter: brightness(1) drop-shadow(0 0 5px rgba(56, 189, 248, 0.4));
   }
-  50% {
-    transform: scale(1.1);
-    filter: drop-shadow(0 0 20px #38bdf8);
-  }
-  100% {
-    transform: scale(1);
+  50% { 
+    transform: scale(1.05);
+    filter: brightness(1.2) drop-shadow(0 0 20px rgba(56, 189, 248, 0.7));
   }
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
+@keyframes text-fade {
+  0%, 100% { 
+    opacity: 0.5; 
+    transform: translateY(0);
   }
-  to {
-    transform: rotate(360deg);
+  50% { 
+    opacity: 1; 
+    transform: translateY(-2px);
+    text-shadow: 0 0 12px var(--accent-cyan);
   }
-}
-.loader-logo{
-  width:120px;
-  animation:pulse 1.5s infinite ease-in-out;
-}
-
-@keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.1);}
-  100%{transform:scale(1);}
-}
-
-
-.loader-container{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background: radial-gradient(circle at center,#0f172a,#020617);
-}
-
-/* circle container */
-.loader-circle{
-  position:relative;
-  width:160px;
-  height:160px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-/* rotating ring */
-.spinner{
-  position:absolute;
-  width:160px;
-  height:160px;
-  border-radius:50%;
-  border:5px solid rgba(255,255,255,0.1);
-  border-top:5px solid #38bdf8;
-  animation:spin 1.5s linear infinite;
-}
-
-/* logo */
-.loader-logo{
-  width:110px;
-  height:110px;
-  border-radius:50%;
-  object-fit:cover;
-  background:white;
-  padding:10px;
-}
-
-/* text */
-.loader-text{
-  margin-top:20px;
-  color:white;
-  font-size:18px;
-  letter-spacing:1px;
-}
-
-@keyframes spin{
-  from{ transform:rotate(0deg); }
-  to{ transform:rotate(360deg); }
 }
