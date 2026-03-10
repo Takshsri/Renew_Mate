@@ -1,7 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import logoImage from "../../../images/dashboard.png";
-
+import logoImage from "../images/dashboard.png";
 export default function Register() {
 
   const [firstName, setFirstName] = useState("");

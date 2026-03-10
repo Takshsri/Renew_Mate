@@ -1,4 +1,4 @@
-import logoImage from "../../../images/dashboard.png";
+import logoImage from "../images/dashboard.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { API_URL } from "../api/api";
