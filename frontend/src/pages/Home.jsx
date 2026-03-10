@@ -1,111 +1,114 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import logoImage from "../images/dashboard.png";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#FDFDFF] text-slate-900 font-sans">
+    // Height screen prevents excessive scrolling on desktop
+    <div className="min-h-screen lg:h-screen bg-[#0B0B0F] text-white font-sans selection:bg-violet-500/30 flex flex-col overflow-x-hidden">
       
-      {/* Navbar - Simplified & Elegant */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-sm border-b border-slate-100">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
-          <div className="flex items-center gap-3">
-            {/* Main Logo from dashboard.png */}
+      {/* Background Glows - Fixed so they don't move */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-violet-600/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full" />
+      </div>
+
+      {/* 1. Minimalist Wide Navbar */}
+      <nav className="relative z-50 w-full px-8 py-6">
+        <div className="max-w-[1400px] mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
             <img 
               src={logoImage} 
-              alt="RenewMate Logo" 
-              className="w-12 h-12 rounded-xl shadow-sm border border-slate-100 object-cover" 
+              alt="Logo" 
+              className="w-10 h-10 rounded-xl border border-white/10 object-cover" 
             />
-            <span className="text-2xl font-black tracking-tighter text-slate-800">
-              RenewMate
-            </span>
+            <span className="text-2xl font-black tracking-tighter">RenewMate</span>
           </div>
-          
-          <div className="flex items-center gap-8">
-            <Link to="/login" className="text-sm font-semibold text-slate-500 hover:text-blue-600 transition">
-              Sign In
-            </Link>
-            <Link
-              to="/register"
-              className="bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-100"
-            >
+          <div className="hidden md:flex items-center gap-10">
+            <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-white transition">Sign In</Link>
+            <Link to="/register" className="bg-white text-black px-7 py-3 rounded-2xl text-sm font-black hover:bg-violet-500 hover:text-white transition-all shadow-xl">
               Get Started
             </Link>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-40 pb-20 px-6">
-        <div className="max-w-5xl mx-auto flex flex-col items-center text-center">
+      {/* 2. Main Content - Flex-grow to fill screen */}
+      <main className="relative z-10 flex-grow flex items-center px-8 pb-12 lg:pb-0">
+        <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          
-          
-          <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight text-slate-900 mb-8">
-            Never miss a <span className="text-blue-600">renewal</span> again.
-          </h1>
+          {/* Left Column: Hero Text (Less Compact, More Air) */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="lg:col-span-6 xl:col-span-5 space-y-8"
+          >
+            <div className="inline-block px-4 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-400 text-[10px] font-black uppercase tracking-[0.3em]">
+              Smart Finance Management
+            </div>
+            
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]">
+              Track less.<br />
+              <span className="text-violet-500 italic">Save more.</span>
+            </h1>
+            
+            <p className="text-xl text-slate-400 leading-relaxed max-w-lg font-medium">
+              A calm, automated space to manage every subscription. No more hidden fees or forgotten trials.
+            </p>
 
-          <p className="text-xl text-slate-500 max-w-2xl mb-12 leading-relaxed">
-            The simplest way to track your digital subscriptions, monitor monthly spending, 
-            and keep your financial life in sync.
-          </p>
+            <div className="flex flex-wrap gap-5 pt-4">
+              <button className="bg-violet-600 text-white px-10 py-5 rounded-3xl text-lg font-black hover:bg-violet-500 hover:scale-105 transition-all shadow-[0_0_30px_rgba(139,92,246,0.2)]">
+                Join RenewMate
+              </button>
+              <button className="bg-white/5 border border-white/10 px-10 py-5 rounded-3xl text-lg font-black hover:bg-white/10 transition-all backdrop-blur-sm">
+                View Demo
+              </button>
+            </div>
+          </motion.div>
 
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/register"
-              className="bg-slate-900 text-white px-10 py-4 rounded-2xl text-lg font-bold hover:bg-slate-800 transition shadow-xl"
-            >
-              Join RenewMate
-            </Link>
-            <button className="bg-white text-slate-700 border border-slate-200 px-10 py-4 rounded-2xl text-lg font-bold hover:bg-slate-50 transition">
-              View Demo
-            </button>
-          </div>
-        </div>
-      </section>
+          {/* Right Column: Feature Bento (Non-Scrollable Layout) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="lg:col-span-6 xl:col-span-7 grid grid-cols-2 gap-4"
+          >
+            {/* Main Dashboard Card */}
+            <div className="col-span-2 p-8 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-[2.5rem] min-h-[220px] flex flex-col justify-end group">
+              <div className="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center mb-4 text-violet-400 group-hover:scale-110 transition-transform">📊</div>
+              <h3 className="text-2xl font-black mb-2">Automated Dashboard</h3>
+              <p className="text-slate-400 text-sm">Every recurring payment visualized in a single, clean timeline.</p>
+            </div>
 
-      {/* Simple Stats/Trust Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-3 gap-12">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">100%</div>
-            <p className="text-slate-500 font-medium uppercase tracking-widest text-xs">Automated Tracking</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>
-            <p className="text-slate-500 font-medium uppercase tracking-widest text-xs">Active Monitoring</p>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">$0</div>
-            <p className="text-slate-500 font-medium uppercase tracking-widest text-xs">Forgotten Trials</p>
-          </div>
-        </div>
-      </section>
+            {/* Square 1 */}
+            <div className="p-8 bg-[#16161D] border border-white/5 rounded-[2.5rem] flex flex-col justify-center items-center text-center group">
+              <div className="text-4xl font-black text-violet-500 mb-2 transition-transform group-hover:scale-110">!</div>
+              <h3 className="font-black text-lg">Alerts</h3>
+              <p className="text-slate-500 text-xs mt-1">Instant pings for renewals.</p>
+            </div>
 
-      {/* Feature Cards with Hover Effects */}
-      <section className="py-24 px-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          
-          <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition duration-300">
-            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center mb-6 font-bold">01</div>
-            <h3 className="font-bold text-xl mb-4">Smart Tracking</h3>
-            <p className="text-slate-500 leading-relaxed">Centralize every subscription in one beautiful interface designed for clarity.</p>
-          </div>
-
-          <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition duration-300">
-            <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-6 font-bold">02</div>
-            <h3 className="font-bold text-xl mb-4">Instant Alerts</h3>
-            <p className="text-slate-500 leading-relaxed">Customizable notifications sent straight to your device before any payment hits.</p>
-          </div>
-
-          <div className="p-8 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition duration-300">
-            <div className="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center mb-6 font-bold">03</div>
-            <h3 className="font-bold text-xl mb-4">Budget Clarity</h3>
-            <p className="text-slate-500 leading-relaxed">Detailed insights into your spending habits with clean, easy-to-read charts.</p>
-          </div>
+            {/* Square 2 */}
+            <div className="p-8 bg-[#16161D] border border-white/5 rounded-[2.5rem] flex flex-col justify-center items-center text-center group">
+              <div className="text-4xl font-black text-emerald-400 mb-2 transition-transform group-hover:scale-110">$0</div>
+              <h3 className="font-black text-lg">Waste</h3>
+              <p className="text-slate-500 text-xs mt-1">Zero forgotten trials.</p>
+            </div>
+          </motion.div>
 
         </div>
-      </section>
-      
+      </main>
+
+      {/* 3. Footer / Stats Bar (Simple & Low-profile) */}
+      <footer className="relative z-10 py-8 px-8 border-t border-white/5">
+        <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-widest gap-4">
+          <div className="flex gap-8">
+            <p>100% Secure</p>
+            <p>GDPR Compliant</p>
+            <p>Cloud Encrypted</p>
+          </div>
+          <p className="opacity-50">© 2024 RenewMate. All Rights Reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }

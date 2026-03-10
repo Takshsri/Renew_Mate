@@ -1,27 +1,41 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-import Home from "./pages/Home.jsx";
-import Login from "./pages/Login.jsx";
-import Register from "./pages/Register.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
-import Subscriptions from "./pages/Subscriptions.jsx";
-import AddSubscription from "./pages/AddSubscription.jsx";
-import Profile from "./pages/Profile.jsx";
-
+import Loader from "./components/Loader";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Subscriptions from "./pages/Subscriptions";
+import AddSubscription from "./pages/AddSubscription";
+import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
+function AppRoutes() {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800); // loader time
+
+    return () => clearTimeout(timer);
+  }, [location]);
+
   return (
-    <BrowserRouter>
+    <>
+      {loading && <Loader />}
 
-      <Routes>
-
-        {/* Public Routes */}
+      <Routes location={location}>
+        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
+        {/* Protected */}
         <Route
           path="/dashboard"
           element={
@@ -57,9 +71,15 @@ function App() {
             </ProtectedRoute>
           }
         />
-
       </Routes>
+    </>
+  );
+}
 
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
