@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Subscriptions from "./pages/Subscriptions";
-import AddSubscription from "./pages/AddSubscription";
-import Profile from "./pages/Profile";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Subscriptions from "./pages/Subscriptions.jsx";
+import AddSubscription from "./pages/AddSubscription.jsx";
+import Profile from "./pages/Profile.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
