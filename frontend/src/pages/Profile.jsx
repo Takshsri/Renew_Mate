@@ -13,7 +13,7 @@ export default function Profile() {
 
     try {
 
-      const res = await fetch("http://localhost:3000/users/profile", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
 
   try {
 
-    const res = await fetch("http://localhost:3000/users/profile", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
