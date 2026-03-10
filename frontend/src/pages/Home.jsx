@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import logoImage from "../images/dashboard.png";
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#FDFDFF] text-slate-900 font-sans">
