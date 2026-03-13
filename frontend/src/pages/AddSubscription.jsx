@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Calendar, CreditCard, Tag, IndianRupee, Activity, FileText, PlusCircle, Upload } from "lucide-react";
 import { Navigate } from "react-router-dom";
 export default function AddSubscriptionForm() {
-
+const navigate = useNavigate();
   const [form, setForm] = useState({
     serviceName: "",
     category: "",
