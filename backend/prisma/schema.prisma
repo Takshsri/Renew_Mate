@@ -59,4 +59,5 @@ enum BillingCycle {
 enum SubscriptionStatus {
   ACTIVE
   CANCELLED
+  EXPIRED
 }

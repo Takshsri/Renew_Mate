@@ -44,6 +44,9 @@ export default function Chatbot() {
         body: JSON.stringify({ message: userMessage.text })
       });
       const data = await res.json();
+      if (data.redirectUrl) {
+        window.open(data.redirectUrl, "_blank");
+      }
       let botReply = data.message || "Done.";
       if (data.subscriptions?.length > 0) {
         const list = data.subscriptions.map(s => `• ${s.serviceName}: ₹${s.price}`).join("\n");
