@@ -50,7 +50,7 @@ export default function AddSubscriptionForm() {
       if (!res.ok) throw new Error("Failed to create subscription");
 
       alert("Subscription added successfully");
-
+      navigate("/dashboard");
       setForm({
         serviceName: "", category: "", price: "", billingCycle: "MONTHLY",
         startDate: "", renewalDate: "", paymentMethod: "", status: "ACTIVE", notes: ""
