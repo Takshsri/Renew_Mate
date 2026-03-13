@@ -46,9 +46,11 @@ const suggestions: { service: string; message: string }[] = [];
 
 
 // 1️⃣ Find most expensive subscription
-const mostExpensive = subscriptions.reduce((prev, current) =>
-  prev.price > current.price ? prev : current
-);
+const mostExpensive = subscriptions.length > 0
+  ? subscriptions.reduce((prev, current) =>
+      prev.price > current.price ? prev : current
+    )
+  : null;
 
 if (mostExpensive) {
   suggestions.push({

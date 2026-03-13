@@ -13,7 +13,7 @@ async create(createSubscriptionDto: CreateSubscriptionDto, invoiceUrl?: string) 
   return this.prisma.subscription.create({
     data: {
       serviceName: createSubscriptionDto.serviceName,
-      price: createSubscriptionDto.price,
+      price: Number(createSubscriptionDto.price),
       billingCycle: createSubscriptionDto.billingCycle,
       startDate: new Date(createSubscriptionDto.startDate),
       renewalDate: new Date(createSubscriptionDto.renewalDate),
