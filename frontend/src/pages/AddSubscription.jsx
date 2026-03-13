@@ -1,131 +1,180 @@
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
-import AddSubscriptionForm from "../components/AddSubscriptionForm";
-import { Menu, X, Upload, Link as LinkIcon, Camera } from "lucide-react";
+import { Calendar, CreditCard, Tag, IndianRupee, Activity, FileText, PlusCircle } from "lucide-react";
 
-export default function AddSubscription() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [uploadMethod, setUploadMethod] = useState("file"); // 'file' or 'url'
+export default function AddSubscriptionForm() {
+  const [form, setForm] = useState({
+    serviceName: "",
+    category: "",
+    price: "",
+    billingCycle: "MONTHLY",
+    startDate: "",
+    renewalDate: "",
+    paymentMethod: "",
+    status: "ACTIVE",
+    notes: ""
+  });
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_URL}/subscriptions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(form)
+      });
+      if (!res.ok) throw new Error("Failed to create subscription");
+      alert("Subscription added successfully");
+      setForm({
+        serviceName: "", category: "", price: "", billingCycle: "MONTHLY",
+        startDate: "", renewalDate: "", paymentMethod: "", status: "ACTIVE", notes: ""
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong");
+    }
+  };
+
+  const inputStyle = "w-full bg-slate-800/60 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all text-sm";
+  const labelStyle = "block text-[10px] font-bold text-cyan-500 uppercase tracking-widest mb-1.5 ml-1";
+  const iconStyle = "absolute left-3 top-[34px] w-4 h-4 text-slate-400";
 
   return (
-    <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans overflow-x-hidden">
-      
-      {/* Responsive Sidebar */}
-      <div className={`
-        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:relative lg:translate-x-0 lg:flex
-      `}>
-        <Sidebar />
+    <div className="max-w-3xl mx-auto p-6 bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <PlusCircle className="text-cyan-400" /> New Subscription
+        </h2>
+        <p className="text-slate-400 text-xs mt-1">Fill in the details to track your recurring expenses.</p>
       </div>
 
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
-        <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
-          <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">MATE</span></h2>
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 bg-white/5 rounded-lg border border-white/10 text-cyan-400">
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        
+        {/* Service Name - Full Width */}
+        <div className="md:col-span-2 relative">
+          <label className={labelStyle}>Service Name</label>
+          <Tag className={iconStyle} />
+          <input
+            type="text"
+            name="serviceName"
+            value={form.serviceName}
+            onChange={handleChange}
+            placeholder="e.g. Netflix, Spotify, AWS"
+            className={inputStyle}
+            required
+          />
         </div>
 
-        <Navbar />
+        {/* Category */}
+        <div className="relative">
+          <label className={labelStyle}>Category</label>
+          <Activity className={iconStyle} />
+          <select name="category" value={form.category} onChange={handleChange} className={`${inputStyle} appearance-none cursor-pointer`}>
+            <option value="" className="bg-slate-900">Select Category</option>
+            <option value="Entertainment" className="bg-slate-900">Entertainment</option>
+            <option value="Music" className="bg-slate-900">Music</option>
+            <option value="Productivity" className="bg-slate-900">Productivity</option>
+            <option value="Cloud" className="bg-slate-900">Cloud</option>
+          </select>
+        </div>
 
-        <main className="p-4 sm:p-6 lg:p-8 relative">
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
+        {/* Price */}
+        <div className="relative">
+          <label className={labelStyle}>Price</label>
+          <IndianRupee className={iconStyle} />
+          <input
+            type="number"
+            name="price"
+            value={form.price}
+            onChange={handleChange}
+            placeholder="0.00"
+            className={inputStyle}
+            required
+          />
+        </div>
 
-          <div className="max-w-4xl mx-auto">
-            <header className="mb-10 text-center lg:text-left">
-              <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">
-                Initialize <span className="text-cyan-400">Asset</span>
-              </h1>
-              <p className="text-slate-500 text-sm mt-1 tracking-widest">UPLOAD DOCUMENTATION FOR VERIFICATION</p>
-            </header>
+        {/* Billing Cycle */}
+        <div className="relative">
+          <label className={labelStyle}>Billing Cycle</label>
+          <Calendar className={iconStyle} />
+          <select name="billingCycle" value={form.billingCycle} onChange={handleChange} className={inputStyle}>
+            <option value="MONTHLY" className="bg-slate-900">Monthly</option>
+            <option value="YEARLY" className="bg-slate-900">Yearly</option>
+            <option value="WEEKLY" className="bg-slate-900">Weekly</option>
+          </select>
+        </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              
-              {/* Left: Standard Form */}
-              <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl shadow-2xl">
-                <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full shadow-[0_0_8px_#22d3ee]" />
-                  Subscription Details
-                </h2>
-                <AddSubscriptionForm />
-              </div>
+        {/* Payment Method */}
+        <div className="relative">
+          <label className={labelStyle}>Payment Method</label>
+          <CreditCard className={iconStyle} />
+          <select name="paymentMethod" value={form.paymentMethod} onChange={handleChange} className={inputStyle}>
+            <option value="" className="bg-slate-900">Choose Method</option>
+            <option value="UPI" className="bg-slate-900">UPI</option>
+            <option value="Credit Card" className="bg-slate-900">Credit Card</option>
+            <option value="PayPal" className="bg-slate-900">PayPal</option>
+          </select>
+        </div>
 
-              {/* Right: Verification / Image Section */}
-              <div className="space-y-6">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl shadow-2xl">
-                  <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <Camera className="text-cyan-400" size={20} />
-                    Proof of Subscription
-                  </h2>
+        {/* Start Date */}
+        <div className="relative">
+          <label className={labelStyle}>Start Date</label>
+          <Calendar className={iconStyle} />
+          <input
+            type="date"
+            name="startDate"
+            value={form.startDate}
+            onChange={handleChange}
+            className={`${inputStyle} [color-scheme:dark]`}
+            required
+          />
+        </div>
 
-                  {/* Toggle Method */}
-                  <div className="flex bg-black/40 p-1 rounded-xl border border-white/5 mb-6">
-                    <button 
-                      onClick={() => setUploadMethod("file")}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${uploadMethod === "file" ? "bg-cyan-600 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
-                    >
-                      <Upload size={14} /> FILE UPLOAD
-                    </button>
-                    <button 
-                      onClick={() => setUploadMethod("url")}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-bold rounded-lg transition-all ${uploadMethod === "url" ? "bg-cyan-600 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"}`}
-                    >
-                      <LinkIcon size={14} /> PHOTO URL
-                    </button>
-                  </div>
+        {/* Renewal Date */}
+        <div className="relative">
+          <label className={labelStyle}>Renewal Date</label>
+          <Calendar className={iconStyle} />
+          <input
+            type="date"
+            name="renewalDate"
+            value={form.renewalDate}
+            onChange={handleChange}
+            className={`${inputStyle} [color-scheme:dark]`}
+            required
+          />
+        </div>
 
-                  {uploadMethod === "file" ? (
-                    <div className="border-2 border-dashed border-white/10 rounded-2xl p-10 flex flex-col items-center justify-center group hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all cursor-pointer">
-                      <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                        <Upload className="text-cyan-400" />
-                      </div>
-                      <p className="text-sm font-medium text-slate-300">Drag & drop receipt</p>
-                      <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-tighter">PDF, PNG, JPG (Max 5MB)</p>
-                      <input type="file" className="hidden" id="file-upload" />
-                      <label htmlFor="file-upload" className="mt-4 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold hover:bg-white/10 cursor-pointer">BROWSE FILES</label>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <p className="text-xs text-slate-400 uppercase tracking-widest">Direct Link to Receipt Image</p>
-                      <div className="relative">
-                        <input 
-                          type="text" 
-                          placeholder="https://example.com/receipt.jpg"
-                          className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-cyan-500/50 text-white transition-all"
-                        />
-                      </div>
-                      <div className="p-4 bg-cyan-400/5 border border-cyan-400/20 rounded-xl">
-                        <p className="text-[10px] text-cyan-400 leading-relaxed">
-                          Note: Ensure the URL is public so the verification engine can index the document.
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </div>
+        {/* Notes - Full Width */}
+        <div className="md:col-span-2 relative">
+          <label className={labelStyle}>Notes</label>
+          <FileText className={iconStyle} />
+          <textarea
+            name="notes"
+            value={form.notes}
+            onChange={handleChange}
+            placeholder="Optional notes..."
+            className={`${inputStyle} h-20 pt-2 resize-none`}
+          />
+        </div>
 
-                {/* System Message */}
-                <div className="p-4 bg-amber-400/5 border border-amber-400/20 rounded-2xl">
-                  <p className="text-[11px] text-amber-200/70 italic leading-relaxed">
-                    * Automated verification takes approximately 2-5 cycles. Incorrect documentation may result in asset suspension.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </main>
-      </div>
+        {/* Submit */}
+        <div className="md:col-span-2 mt-2">
+          <button
+            type="submit"
+            className="w-full bg-cyan-600 hover:bg-cyan-500 hover:shadow-[0_0_20px_rgba(6,182,212,0.3)] text-white transition-all rounded-xl py-3 text-sm font-bold tracking-[0.2em]"
+          >
+            CONFIRM SUBSCRIPTION
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

@@ -1,100 +1,118 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
-  CreditCard, 
-  PlusCircle, 
-  UserCircle, 
-  Zap, 
-  Home, 
-  LogOut 
+  Layers,      // Better for Subscriptions
+  PlusSquare,  // Better for Add New
+  User,        // Clean Profile icon
+  LogOut,
+  Menu,
+  X,
+  Zap,         // AI Chat
+  Settings     // Optional
 } from "lucide-react";
 import logoImage from "../images/dashboard.png";
 
 export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
 
+  // Optimized NavItems with more "Correct" Icons
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: <LayoutDashboard size={20} /> },
-    { name: "Subscriptions", path: "/subscriptions", icon: <CreditCard size={20} /> },
-    { name: "Add New", path: "/add-subscription", icon: <PlusCircle size={20} /> },
-    { name: "Profile", path: "/profile", icon: <UserCircle size={20} /> },
+    { name: "My Subscriptions", path: "/subscriptions", icon: <Layers size={20} /> },
+    { name: "Add Subscription", path: "/add-subscription", icon: <PlusSquare size={20} /> },
+    { name: "AI Assistant", path: "/chat", icon: <Zap size={20} /> },
+    { name: "Account", path: "/profile", icon: <User size={20} /> },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  };
+
+  // Improved click handler: only closes sidebar if we are on mobile (screen < 1024px)
+  const handleItemClick = () => {
+    if (window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <div className="h-screen w-64 bg-[#020205] border-r border-white/5 text-slate-400 p-6 flex flex-col shadow-[20px_0_50px_rgba(0,0,0,0.3)] relative z-50">
-      
-      {/* 1. Brand Logo Area */}
-      <div className="flex items-center gap-3 mb-10 px-2">
-        <div className="p-1.5 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-lg shadow-lg shadow-violet-500/20">
-          <img src={logoImage} alt="Logo" className="w-6 h-6 object-cover rounded" />
-        </div>
-        <h2 className="text-lg font-black tracking-tighter text-white uppercase italic">
-          Renew<span className="text-violet-400">Mate</span>
-        </h2>
-      </div>
+    <>
+      {/* MOBILE TRIGGER */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="lg:hidden fixed top-4 left-4 z-[70] p-2 bg-cyan-600 text-white rounded-lg shadow-xl active:scale-90 transition-transform"
+      >
+        {isOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
 
-      {/* 2. Main Navigation */}
-      <nav className="flex flex-col gap-2 flex-grow">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2 ml-2">Main Menu</p>
-        {navItems.map((item) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className={`group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 border ${
-              isActive(item.path)
-                ? "bg-violet-500/10 border-violet-500/20 text-white shadow-[0_0_20px_rgba(139,92,246,0.1)]"
-                : "border-transparent hover:bg-white/[0.03] hover:text-slate-200"
-            }`}
-          >
-            <span className={`${isActive(item.path) ? "text-violet-400" : "text-slate-500 group-hover:text-slate-300"}`}>
-              {item.icon}
-            </span>
-            <span className="font-bold text-sm tracking-tight">{item.name}</span>
-            
-            {isActive(item.path) && (
-              <div className="ml-auto w-1 h-4 bg-violet-500 rounded-full shadow-[0_0_10px_#8b5cf6]" />
-            )}
-          </Link>
-        ))}
-      </nav>
+      {/* MOBILE OVERLAY */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[55] lg:hidden animate-in fade-in duration-300"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-      {/* 3. Bottom Utility Section */}
-      <div className="flex flex-col gap-2 pt-6 border-t border-white/5">
+      {/* SIDEBAR CONTAINER */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-[60] w-64 bg-[#020205] border-r border-white/5 text-slate-400 p-6 flex flex-col 
+        transition-all duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+      `}>
         
-        {/* Back to Home Button */}
-        <Link
-          to="/"
-          className="flex items-center gap-4 px-4 py-3 rounded-2xl text-slate-500 hover:bg-white/[0.03] hover:text-white transition-all group"
-        >
-          <Home size={20} className="group-hover:text-violet-400 transition-colors" />
-          <span className="font-bold text-sm tracking-tight">Landing Page</span>
+        {/* Brand Logo */}
+        <Link to="/" className="flex items-center gap-3 mb-10 px-2 group">
+          <div className="p-1.5 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl shadow-lg group-hover:rotate-12 transition-transform">
+            <img src={logoImage} alt="Logo" className="w-6 h-6 object-cover rounded" />
+          </div>
+          <h2 className="text-lg font-black tracking-tighter text-white uppercase italic">
+            Renew<span className="text-cyan-400">Mate</span>
+          </h2>
         </Link>
 
-        {/* Logout Button */}
-        <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            window.location.href = "/login";
-          }}
-          className="flex items-center gap-4 px-4 py-3 rounded-2xl text-slate-500 hover:bg-red-500/10 hover:text-red-400 transition-all group"
-        >
-          <LogOut size={20} />
-          <span className="font-bold text-sm tracking-tight">Logout</span>
-        </button>
+        {/* Main Navigation */}
+        <nav className="flex flex-col gap-1.5 flex-grow">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-700 mb-4 ml-2">Core System</p>
+          
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={handleItemClick}
+              className={`group flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 border ${
+                isActive(item.path)
+                  ? "bg-cyan-500/10 border-cyan-500/20 text-white shadow-[inset_0_0_10px_rgba(6,182,212,0.05)]"
+                  : "border-transparent hover:bg-white/[0.03] hover:text-slate-200"
+              }`}
+            >
+              <div className={`transition-colors ${isActive(item.path) ? "text-cyan-400" : "text-slate-500 group-hover:text-cyan-400/70"}`}>
+                {item.icon}
+              </div>
+              <span className="font-bold text-sm tracking-tight">{item.name}</span>
+              
+              {isActive(item.path) && (
+                <div className="ml-auto w-1.5 h-1.5 bg-cyan-500 rounded-full shadow-[0_0_8px_#06b6d4]" />
+              )}
+            </Link>
+          ))}
+        </nav>
 
-        {/* User Mini-Profile (Decorative) */}
-        <div className="mt-4 p-3 bg-white/[0.02] border border-white/5 rounded-2xl flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-violet-500 to-blue-500 flex items-center justify-center text-[10px] font-black text-white">
-            JD
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-xs font-black text-white truncate uppercase tracking-tighter">John Doe</p>
-            <p className="text-[9px] text-slate-600 truncate font-bold uppercase">Pro Member</p>
-          </div>
+        {/* Bottom Section */}
+        <div className="pt-6 border-t border-white/5">
+          <button 
+            onClick={handleLogout} 
+            className="flex items-center gap-4 px-4 py-3 rounded-2xl text-slate-600 hover:bg-red-500/10 hover:text-red-400 transition-all w-full group"
+          >
+            <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <span className="font-bold text-sm tracking-tight"> Logout</span>
+          </button>
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 }

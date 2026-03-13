@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Demo from "./pages/Demo";
 
+// Components & Pages
 import Loader from "./components/Loader";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -11,6 +11,8 @@ import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ChatPage from "./pages/ChatPage"; // Make sure this file exists in /src/pages/
+import Demo from "./pages/Demo";
 
 function AppRoutes() {
   const location = useLocation();
@@ -18,10 +20,9 @@ function AppRoutes() {
 
   useEffect(() => {
     setLoading(true);
-
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); // loader time
+    }, 1000); 
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -31,13 +32,13 @@ function AppRoutes() {
       {loading && <Loader />}
 
       <Routes location={location}>
-        {/* Public */}
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/demo" element={<Demo />} />
 
-        {/* Protected */}
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
           element={
@@ -70,6 +71,15 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
             </ProtectedRoute>
           }
         />

@@ -1,89 +1,78 @@
-import { useState ,useEffect} from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { Menu, X, User, Mail, Phone, Lock, ShieldCheck, Save } from "lucide-react";
 
 export default function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
-  // Example state for the form
-  useEffect(() => {
-
-  const fetchProfile = async () => {
-
-    try {
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
-
-      const data = await res.json();
-
-      setFormData({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        phone: data.phone
-      });
-
-    } catch (error) {
-      console.error("Failed to load profile");
-    }
-
-  };
-
-  fetchProfile();
-
-}, []);
   const [formData, setFormData] = useState({
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  password: ""
-});
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: ""
+  });
+
+  // 1. Fixed useEffect logic and placement
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setFormData({
+            firstName: data.firstName || "",
+            lastName: data.lastName || "",
+            email: data.email || "",
+            phone: data.phone || "",
+            password: "" // Keep password empty
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load profile");
+      }
+    };
+    fetchProfile();
+  }, []); // Empty dependency array ensures this only runs once
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-const handleSubmit = async (e) => {
 
-  e.preventDefault();
-
-  try {
-
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      },
-      body: JSON.stringify(formData)
-    });
-
-    const data = await res.json();
-
-    if(res.ok){
-      alert("Profile updated successfully");
-    }else{
-      alert(data.message);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/users/profile`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert("Profile updated successfully");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert("Update failed");
     }
+  };
 
-  } catch (error) {
-    alert("Update failed");
-  }
-
-};
   return (
-    <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans overflow-x-hidden">
+    <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans">
       
-      {/* Responsive Sidebar */}
+      {/* 2. FIXED SIDEBAR WRAPPER */}
       <div className={`
-        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
-        lg:relative lg:translate-x-0 lg:flex
+        lg:static lg:translate-x-0 lg:block lg:w-64 lg:flex-shrink-0
       `}>
         <Sidebar />
       </div>
@@ -96,7 +85,9 @@ const handleSubmit = async (e) => {
         />
       )}
 
-      <div className="flex-1 flex flex-col min-w-0">
+      {/* 3. FIXED MAIN CONTENT AREA */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+        
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
           <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">MATE</span></h2>
@@ -107,8 +98,8 @@ const handleSubmit = async (e) => {
 
         <Navbar />
 
-        <main className="p-4 sm:p-6 lg:p-8 relative">
-          {/* Ambient Background Glow */}
+        {/* Scrollable Section */}
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10 relative">
           <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
           <div className="max-w-5xl mx-auto">
@@ -116,10 +107,10 @@ const handleSubmit = async (e) => {
               <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">
                 User <span className="text-cyan-400">Identity</span>
               </h1>
-              <p className="text-slate-500 text-sm mt-1 tracking-widest">MANAGE ACCOUNT CREDENTIALS AND SECURITY</p>
+              <p className="text-slate-500 text-[10px] mt-1 tracking-[0.3em] font-bold uppercase">MANAGE ACCOUNT CREDENTIALS AND SECURITY</p>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
               
               {/* Left Column: Visual Profile Card */}
               <div className="lg:col-span-1 space-y-6">
@@ -136,16 +127,16 @@ const handleSubmit = async (e) => {
                   </div>
 
                   <h3 className="text-xl font-bold text-white">{formData.firstName} {formData.lastName}</h3>
-                  <p className="text-cyan-400/70 text-xs font-mono tracking-widest mt-1">CORE_USER_ID: 8829-X</p>
+                  <p className="text-cyan-400/70 text-[10px] font-mono tracking-widest mt-1">CORE_USER_ID: 8829-X</p>
                   
                   <div className="mt-8 pt-8 border-t border-white/5 space-y-3">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 uppercase">Security Level</span>
-                      <span className="text-white font-bold">Standard</span>
+                    <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase">
+                      <span className="text-slate-500">Security Level</span>
+                      <span className="text-white">Standard</span>
                     </div>
-                    <div className="flex justify-between text-xs">
-                      <span className="text-slate-500 uppercase">Status</span>
-                      <span className="text-green-400 font-bold">Verified</span>
+                    <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase">
+                      <span className="text-slate-500">Status</span>
+                      <span className="text-green-400">Verified</span>
                     </div>
                   </div>
                 </div>
@@ -160,11 +151,10 @@ const handleSubmit = async (e) => {
 
               {/* Right Column: Edit Form */}
               <div className="lg:col-span-2 bg-white/5 backdrop-blur-md border border-white/10 p-6 sm:p-10 rounded-3xl shadow-2xl">
-<form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {/* First Name */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">First Name</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">First Name</label>
                       <div className="relative group">
                         <User className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                         <input 
@@ -174,9 +164,8 @@ const handleSubmit = async (e) => {
                       </div>
                     </div>
 
-                    {/* Last Name */}
                     <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Last Name</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Last Name</label>
                       <div className="relative group">
                         <User className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                         <input 
@@ -187,9 +176,8 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
 
-                  {/* Email */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Email Address</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Email Address</label>
                     <div className="relative group">
                       <Mail className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
@@ -199,9 +187,8 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
 
-                  {/* Phone */}
                   <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Phone Number</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Phone Number</label>
                     <div className="relative group">
                       <Phone className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
@@ -211,26 +198,26 @@ const handleSubmit = async (e) => {
                     </div>
                   </div>
 
-                  {/* Password */}
                   <div className="space-y-2 pb-4">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">Password</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Password</label>
                     <div className="relative group">
                       <Lock className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
-                        type="password" name="password" placeholder="Change Password"
+                        type="password" name="password" placeholder="••••••••" value={formData.password} onChange={handleChange}
                         className="w-full bg-black/30 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-cyan-500/50 transition-all placeholder:text-slate-700"
                       />
                     </div>
                   </div>
 
-                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(8,145,178,0.3)] transition-all flex items-center justify-center gap-2">
-                    <Save size={18} /> SAVE CHANGES
+                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black tracking-widest text-xs py-4 rounded-xl shadow-[0_0_20px_rgba(8,145,178,0.2)] transition-all flex items-center justify-center gap-2">
+                    <Save size={18} /> UPDATE IDENTITY
                   </button>
                 </form>
               </div>
 
             </div>
           </div>
+          <div className="h-20" />
         </main>
       </div>
     </div>

@@ -8,7 +8,7 @@ export class SubscriptionsService {
 
   constructor(private prisma: DatabaseService) {}
 
-  async create(createSubscriptionDto: CreateSubscriptionDto) {
+async create(createSubscriptionDto: CreateSubscriptionDto, invoiceUrl?: string) {
 
   return this.prisma.subscription.create({
     data: {
@@ -17,7 +17,8 @@ export class SubscriptionsService {
       billingCycle: createSubscriptionDto.billingCycle,
       startDate: new Date(createSubscriptionDto.startDate),
       renewalDate: new Date(createSubscriptionDto.renewalDate),
-      userId: createSubscriptionDto.userId
+      userId: createSubscriptionDto.userId,
+      invoiceUrl: invoiceUrl
     }
   });
 

@@ -14,6 +14,7 @@ model User {
   email         String         @unique
   password      String
   phone         String
+  profilePhoto  String?
   createdAt     DateTime       @default(now())
 
   subscriptions Subscription[]
@@ -22,11 +23,16 @@ model User {
 model Subscription {
   id            String   @id @default(uuid())
   serviceName   String
+  category      String?
   price         Float
   billingCycle  BillingCycle
   startDate     DateTime
   renewalDate   DateTime
+  paymentMethod String?
+  notes         String?
   status        SubscriptionStatus @default(ACTIVE)
+
+  invoiceUrl    String?
 
   createdAt     DateTime @default(now())
 
@@ -35,7 +41,6 @@ model Subscription {
 
   reminders     Reminder[]
 }
-
 model Reminder {
   id             String   @id @default(uuid())
   reminderDate   DateTime

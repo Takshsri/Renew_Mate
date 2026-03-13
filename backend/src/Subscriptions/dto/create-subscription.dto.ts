@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsEnum, IsDateString } from 'class-validator';
+import { IsString, IsNumber, IsEnum, IsDateString, IsOptional } from 'class-validator';
 
 export enum BillingCycle {
   MONTHLY = 'MONTHLY',
@@ -25,5 +25,8 @@ export class CreateSubscriptionDto {
 
   @IsString()
   userId: string;
+  @IsOptional()
+  @IsString()
+  invoiceUrl?: string;
 
 }
