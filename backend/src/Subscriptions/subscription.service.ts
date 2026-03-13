@@ -67,33 +67,29 @@ if (renewalDate < today) {
 
   }
 
-  async findUserSubscriptions(userId: string) {
+async findUserSubscriptions(userId: string) {
 
-    const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId }
-    });
+  const subscriptions = await this.prisma.subscription.findMany({
+    where: { userId }
+  });
 
-    const today = new Date();
+  const today = new Date();
 
-    // Auto update expired subscriptions
-    for (const sub of subscriptions) {
+  const updatedSubscriptions = subscriptions.map(sub => {
 
-      if (new Date(sub.renewalDate) < today && sub.status === "ACTIVE") {
+    const renewalDate = new Date(sub.renewalDate);
 
-        await this.prisma.subscription.update({
-          where: { id: sub.id },
-          data: { status: "EXPIRED" }
-        });
+    const status = renewalDate < today ? "EXPIRED" : "ACTIVE";
 
-        sub.status = "EXPIRED";
-      }
+    return {
+      ...sub,
+      status
+    };
 
-    }
+  });
 
-    return subscriptions;
-
-  }
-
+  return updatedSubscriptions;
+}
   async remove(id: string) {
 
     return this.prisma.subscription.delete({

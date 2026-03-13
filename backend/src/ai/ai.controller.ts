@@ -48,38 +48,44 @@ export class AiController {
     const action = parsed.action;
 
     // ADD SUBSCRIPTION
-    if (action === "ADD_SUBSCRIPTION") {
+if (action === "ADD_SUBSCRIPTION") {
 
-      const startDate = new Date();
-      let renewalDate = new Date(startDate);
+  if (!parsed.serviceName || !parsed.price || !parsed.billingCycle) {
+    return {
+      message:
+        "I need more details to add this subscription.\n\nExample:\nAdd Netflix monthly 499"
+    };
+  }
 
-      if (parsed.billingCycle === "MONTHLY") {
-        renewalDate.setMonth(renewalDate.getMonth() + 1);
-      }
+  const startDate = new Date();
+  let renewalDate = new Date(startDate);
 
-      if (parsed.billingCycle === "YEARLY") {
-        renewalDate.setFullYear(renewalDate.getFullYear() + 1);
-      }
+  if (parsed.billingCycle === "MONTHLY") {
+    renewalDate.setMonth(startDate.getMonth() + 1);
+  }
 
-      if (parsed.billingCycle === "WEEKLY") {
-        renewalDate.setDate(renewalDate.getDate() + 7);
-      }
+  if (parsed.billingCycle === "YEARLY") {
+    renewalDate.setFullYear(startDate.getFullYear() + 1);
+  }
 
-      const subscription = await this.subscriptionService.create({
-        serviceName: parsed.serviceName,
-        price: parsed.price,
-        billingCycle: parsed.billingCycle,
-        startDate,
-        renewalDate,
-        userId
-      });
+  if (parsed.billingCycle === "WEEKLY") {
+    renewalDate.setDate(startDate.getDate() + 7);
+  }
 
-      return {
-        message: `${parsed.serviceName} subscription added successfully.`,
-        subscription
-      };
-    }
+  const subscription = await this.subscriptionService.create({
+    serviceName: parsed.serviceName,
+    price: Number(parsed.price),
+    billingCycle: parsed.billingCycle,
+    startDate,
+    renewalDate,
+    userId
+  });
 
+  return {
+    message: `${parsed.serviceName} subscription added successfully.`,
+    subscription
+  };
+}
     // SHOW SUBSCRIPTIONS
     if (action === "SHOW_SUBSCRIPTIONS") {
 
@@ -110,33 +116,30 @@ export class AiController {
     };
 
     // CANCEL SUBSCRIPTION
-    if (action === "CANCEL_SUBSCRIPTION") {
+if (action === "CANCEL_SUBSCRIPTION") {
 
-      const subscriptions =
-        await this.subscriptionService.findUserSubscriptions(userId);
+  const subscriptions =
+    await this.subscriptionService.findUserSubscriptions(userId);
 
-      const sub = subscriptions.find(
-        s => s.serviceName.toLowerCase() === parsed.serviceName.toLowerCase()
-      );
+  const sub = subscriptions.find(
+    s => s.serviceName.toLowerCase() === parsed.serviceName?.toLowerCase()
+  );
 
-      if (!sub) {
-        return {
-          message: `No ${parsed.serviceName} subscription found in RenewMate.`
-        };
-      }
+  if (!sub) {
+    return {
+      message: `No ${parsed.serviceName} subscription found in RenewMate.`
+    };
+  }
 
-      await this.subscriptionService.remove(sub.id);
+  const serviceKey = parsed.serviceName.toLowerCase();
+  const redirectUrl = cancelUrls[serviceKey];
 
-      const serviceKey = parsed.serviceName.toLowerCase();
-      const redirectUrl = cancelUrls[serviceKey];
-
-      return {
-        message: `${parsed.serviceName} subscription removed from RenewMate.`,
-        redirectUrl: redirectUrl || null
-      };
-    }
-
-    // UPCOMING RENEWALS
+  return {
+    message:
+      `To cancel ${parsed.serviceName}, please visit the official cancellation page.`,
+    redirectUrl: redirectUrl || null
+  };
+}    // UPCOMING RENEWALS
     if (action === "UPCOMING_RENEWALS") {
 
       const subscriptions =
