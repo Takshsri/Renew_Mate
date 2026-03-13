@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Delete, Body, Param,Patch, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, Param,Patch, UseGuards, Req } from '@nestjs/common';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { SubscriptionsService } from './subscription.service';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -19,17 +19,23 @@ export class SubscriptionsController {
   @UseInterceptors(FileInterceptor('invoice'))
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() createSubscriptionDto: CreateSubscriptionDto
+    @Body() createSubscriptionDto: CreateSubscriptionDto,
+    @Req() req: any
+
   ) {
+let invoiceUrl: string | undefined;
 
-    let invoiceUrl: string | undefined;
-    if (file) {
-      const upload: any = await this.cloudinaryService.uploadFile(file);
-      invoiceUrl = upload.secure_url;
-    }
-
-    return this.subscriptionsService.create(createSubscriptionDto, invoiceUrl);
+  if (file) {
+    const upload: any = await this.cloudinaryService.uploadFile(file);
+    invoiceUrl = upload.secure_url;
   }
+
+  const userId = req.user.sub; // from JWT
+
+  return this.subscriptionsService.create(
+    { ...createSubscriptionDto, userId },
+    invoiceUrl
+  );  }
 
   @Get()
   findAll() {
