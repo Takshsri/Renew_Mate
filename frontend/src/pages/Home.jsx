@@ -65,12 +65,12 @@ export default function Home() {
             className="lg:col-span-6 xl:col-span-5 space-y-6 md:space-y-8 text-center lg:text-left"
           >
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-[10px] font-bold uppercase tracking-widest">
-              <Zap size={12} fill="currentColor" /> 1.0 Release
+              <Zap size={12} fill="currentColor" /> 
             </motion.div>
             
             <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl xl:text-8xl font-black tracking-tight leading-[0.95]">
               Track less.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 italic">Save more.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 italic">Save More .</span>
             </motion.h1>
             
             <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
