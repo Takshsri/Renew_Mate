@@ -226,7 +226,7 @@ export default function Chatbot() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder:text-slate-700 px-4 text-sm"
+              className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder:text-slate-700 px-4 text-xl"
               placeholder="Type your command..."
             />
 
