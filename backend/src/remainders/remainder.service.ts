@@ -6,25 +6,26 @@ import { DatabaseService } from '../database/database.service';
 export class RemindersService {
   constructor(private prisma: DatabaseService) {}
 
-  async getUpcomingRenewals() {
-    const today = new Date();
+async getUpcomingRenewals() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    // remind for next 7 days
-    const reminderWindow = new Date();
-    reminderWindow.setDate(today.getDate() + 7);
+  const reminderWindow = new Date(today);
+  reminderWindow.setDate(today.getDate() + 7);
+  reminderWindow.setHours(23, 59, 59, 999);
 
-    return this.prisma.subscription.findMany({
-      where: {
-        renewalDate: {
-          gte: today,
-          lte: reminderWindow,
-        },
+  return this.prisma.subscription.findMany({
+    where: {
+      renewalDate: {
+        gte: today,
+        lte: reminderWindow,
       },
-      include: {
-        user: true,
-      },
-    });
-  }
+    },
+    include: {
+      user: true,
+    },
+  });
+}
 
   @Cron('0 7 * * *')
   async checkRenewals() {
