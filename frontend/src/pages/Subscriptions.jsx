@@ -63,11 +63,7 @@ export default function Subscriptions() {
               </p>
             </div>
 
-            <div className="hidden sm:block">
-               <div className="px-4 py-2 bg-cyan-500/5 border border-cyan-500/20 rounded-xl text-[10px] font-black tracking-widest text-cyan-500">
-                 ENCRYPTION: AES-256
-               </div>
-            </div>
+            
           </div>
 
           {/* Subscription List Container */}
