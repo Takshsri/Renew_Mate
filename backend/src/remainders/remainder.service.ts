@@ -9,14 +9,15 @@ export class RemindersService {
   async getUpcomingRenewals() {
     const today = new Date();
 
-    const threeDaysLater = new Date();
-    threeDaysLater.setDate(today.getDate() + 3);
+    // remind for next 7 days
+    const reminderWindow = new Date();
+    reminderWindow.setDate(today.getDate() + 7);
 
     return this.prisma.subscription.findMany({
       where: {
         renewalDate: {
-          lte: threeDaysLater,
           gte: today,
+          lte: reminderWindow,
         },
       },
       include: {
@@ -30,7 +31,9 @@ export class RemindersService {
     const subscriptions = await this.getUpcomingRenewals();
 
     for (const sub of subscriptions) {
-      console.log(`Reminder: ${sub.serviceName} renewing for ${sub.user.email}`);
+      console.log(
+        `Reminder: ${sub.serviceName} renewing for ${sub.user.email}`,
+      );
     }
   }
 }
