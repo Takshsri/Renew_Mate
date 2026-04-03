@@ -149,4 +149,9 @@ async getUpcomingRenewals(userId: string) {
     },
   });
 }
+async getSubscriptionById(id: string) {
+  return this.prisma.subscription.findUnique({
+    where: { id },
+  });
+}
 }

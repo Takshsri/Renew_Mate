@@ -1,17 +1,30 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, Post, Req, UseGuards,Get } from '@nestjs/common';
 import { AiService } from './ai.service';
 import { SubscriptionsService } from 'src/Subscriptions/subscription.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 @Controller('ai')
 export class AiController {
 
   constructor(
     private aiService: AiService,
-    private subscriptionService: SubscriptionsService
+    private subscriptionService: SubscriptionsService,
+   
   ) {}
+@Get('subscription/:id')
+  async getSubscriptionSuggestion(@Param('id') id: string) {
+    const subscription =
+      await this.subscriptionService.getSubscriptionById(id);
 
+    if (!subscription) {
+      return {
+        message: 'Subscription not found',
+      };
+    }
+
+    return this.aiService.getSuggestion(subscription);
+  }
   @Post('chat')
   async chat(@Req() req, @Body() body: any) {
 
