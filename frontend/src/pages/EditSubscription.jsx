@@ -36,46 +36,38 @@ export default function EditSubscription() {
     fetchSubscription();
   }, []);
 
-const fetchSubscription = async () => {
-  const toastId = toast.loading("Loading subscription...");
+  const fetchSubscription = async () => {
+    try {
+      const res = await fetch(`${API_URL}/subscriptions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-  try {
-    const res = await fetch(`${API_URL}/subscriptions/${id}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+      const data = await res.json();
+      console.log("Fetched data:", data);
 
-    const data = await res.json();
+      setForm({
+        serviceName: data.serviceName || "",
+        category: data.category || "",
+        price: data.price || "",
+        billingCycle: data.billingCycle || "MONTHLY",
+        startDate: data.startDate
+          ? new Date(data.startDate).toISOString().split("T")[0]
+          : "",
+        renewalDate: data.renewalDate
+          ? new Date(data.renewalDate).toISOString().split("T")[0]
+          : "",
+        paymentMethod: data.paymentMethod || "",
+        status: data.status || "ACTIVE",
+        notes: data.notes || "",
+        invoiceUrl: data.invoiceUrl || "",
+      });
+    } catch (error) {
+      console.error("Error fetching subscription:", error);
+    }
+  };
 
-    setForm({
-      serviceName: data.serviceName || "",
-      category: data.category || "",
-      price: data.price || "",
-      billingCycle: data.billingCycle || "MONTHLY",
-      startDate: data.startDate
-        ? new Date(data.startDate).toISOString().split("T")[0]
-        : "",
-      renewalDate: data.renewalDate
-        ? new Date(data.renewalDate).toISOString().split("T")[0]
-        : "",
-      paymentMethod: data.paymentMethod || "",
-      status: data.status || "ACTIVE",
-      notes: data.notes || "",
-      invoiceUrl: data.invoiceUrl || "",
-    });
-
-    toast.success("Loaded successfully", {
-      id: toastId,
-    });
-  } catch (error) {
-    console.error("Error fetching subscription:", error);
-
-    toast.error("Failed to load subscription", {
-      id: toastId,
-    });
-  }
-};
   const handleChange = (e) => {
     setForm({
       ...form,

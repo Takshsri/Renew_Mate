@@ -10,25 +10,7 @@ export default function SubscriptionList() {
     fetchSubscriptions();
   }, []);
 
-  const fetchSubscriptions = async () => {
-    try {
-      const res = await fetch(`${API_URL}/subscriptions`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        setSubscriptions(data);
-      }
-    } catch (error) {
-      console.error("Error fetching subscriptions:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
 const fetchSubscriptions = async () => {
   const toastId = toast.loading("Fetching subscriptions...");
 
