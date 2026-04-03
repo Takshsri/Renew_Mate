@@ -112,6 +112,7 @@ setDraft((prev) => {
   pendingField,
   draft: updatedDraft,
   currentStep,
+  originalServiceName: draft.serviceName,
 }),
   });
 

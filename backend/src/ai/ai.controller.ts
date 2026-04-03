@@ -121,7 +121,10 @@ if (isComplete){
   
 
   const subscription = await this.subscriptionService.create({
-     serviceName: draft.serviceName,
+    serviceName:
+    draft.serviceName ||
+    body.draft?.serviceName ||
+    body.originalServiceName,
     category: draft.category,
     price: Number(draft.price),
     billingCycle: draft.billingCycle,
@@ -145,11 +148,13 @@ console.log("FINAL DRAFT:", draft);
 
   return {
     message: fieldMeta[nextField].question,
+    
     pendingAction: "ADD_SUBSCRIPTION",
     pendingField: nextField,
     inputType: fieldMeta[nextField].inputType,
     currentStep: currentStep + 1,
     draft,
+    originalServiceName: draft.serviceName,
   };
 }
     //Show Subscriptions
