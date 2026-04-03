@@ -37,15 +37,18 @@ if (renewalDate < today) {
 
     return this.prisma.subscription.create({
       data: {
-        serviceName: createSubscriptionDto.serviceName,
-        price: Number(createSubscriptionDto.price),
-        billingCycle: createSubscriptionDto.billingCycle,
-        startDate,
-        renewalDate,
-        userId: createSubscriptionDto.userId,
-        invoiceUrl,
-        status
-      }
+  serviceName: createSubscriptionDto.serviceName,
+  category: createSubscriptionDto.category || null,
+  paymentMethod: createSubscriptionDto.paymentMethod || null,
+  notes: createSubscriptionDto.notes || null,
+  price: Number(createSubscriptionDto.price),
+  billingCycle: createSubscriptionDto.billingCycle,
+  startDate,
+  renewalDate,
+  userId: createSubscriptionDto.userId,
+  invoiceUrl,
+  status
+}
     });
 
   }
@@ -107,13 +110,22 @@ async findUserSubscriptions(userId: string) {
 
   }
 
-  async update(id: string, updateSubscriptionDto: UpdateSubscriptionDto) {
-
-    return this.prisma.subscription.update({
-      where: { id },
-      data: updateSubscriptionDto
-    });
-
-  }
-
+async update(
+  id: string,
+  dto: UpdateSubscriptionDto,
+  invoiceUrl?: string,
+) {
+  return this.prisma.subscription.update({
+    where: { id },
+    data: {
+      ...dto,
+      ...(invoiceUrl && { invoiceUrl }),
+      price: dto.price ? Number(dto.price) : undefined,
+      startDate: dto.startDate ? new Date(dto.startDate) : undefined,
+      renewalDate: dto.renewalDate
+        ? new Date(dto.renewalDate)
+        : undefined,
+    },
+  });
+}
 }

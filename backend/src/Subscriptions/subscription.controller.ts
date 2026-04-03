@@ -45,21 +45,34 @@ let invoiceUrl: string | undefined;
 findOne(@Param('id') id: string) {
   return this.subscriptionsService.findOne(id);
 }
-  @Get(':userId')
-  findUserSubscriptions(@Param('userId') userId: string) {
-    return this.subscriptionsService.findUserSubscriptions(userId);
-  }
+  @Get('user/:userId')
+findUserSubscriptions(@Param('userId') userId: string) {
+  return this.subscriptionsService.findUserSubscriptions(userId);
+}
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subscriptionsService.remove(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateSubscriptionDto: UpdateSubscriptionDto,
-  ) {
-    return this.subscriptionsService.update(id, updateSubscriptionDto);
+@Patch(':id')
+@UseInterceptors(FileInterceptor('invoice'))
+async update(
+  @Param('id') id: string,
+  @UploadedFile() file: any,
+  @Body() updateSubscriptionDto: UpdateSubscriptionDto,
+) {
+  let invoiceUrl: string | undefined;
+
+  if (file) {
+    const upload: any = await this.cloudinaryService.uploadFile(file);
+    invoiceUrl = upload.secure_url;
   }
+
+  return this.subscriptionsService.update(
+    id,
+    updateSubscriptionDto,
+    invoiceUrl,
+  );
+}
 }
