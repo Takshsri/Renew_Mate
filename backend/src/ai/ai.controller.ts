@@ -98,13 +98,16 @@ if (
     "notes",
   ];
 
-  const draft = body.draft || {};
+ 
   let currentStep = body.currentStep || 0;
 
   // store service name from first message
-  if (!draft.serviceName && parsed.serviceName) {
-    draft.serviceName = parsed.serviceName;
-  }
+  const draft = {
+  ...(body.draft || {}),
+  ...(parsed.serviceName && !body.draft?.serviceName
+    ? { serviceName: parsed.serviceName }
+    : {}),
+};
 
   // save current answer
   if (body.pendingField && body.message) {
@@ -128,7 +131,7 @@ if (isComplete){
     renewalDate: new Date(draft.renewalDate).toISOString(),
     userId,
   });
-
+console.log("FINAL DRAFT:", draft);
   return {
     message: `${subscription.serviceName} added successfully ✅`,
     subscription,
