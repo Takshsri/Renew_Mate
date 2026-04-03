@@ -13,7 +13,9 @@ import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage"; // Make sure this file exists in /src/pages/
 import Demo from "./pages/Demo";
+import NotFound from "./pages/NotFound";
 
+<Route path="*" element={<NotFound />} />
 function AppRoutes() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/demo" element={<Demo />} />
-
+        <Route path="*" element={<NotFound />} />
         {/* Protected Routes */}
         <Route
           path="/dashboard"
