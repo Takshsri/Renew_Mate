@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-// Components & Pages
+
 import Loader from "./components/Loader";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -87,7 +87,7 @@ function AppRoutes() {
           }
         />
 
-        {/* 404 must always be last */}
+       
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

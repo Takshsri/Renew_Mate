@@ -103,12 +103,7 @@ export default function Profile() {
           <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
 
           <div className="max-w-5xl mx-auto">
-            <header className="mb-10">
-              <h1 className="text-3xl font-black tracking-tighter text-white uppercase italic">
-                User <span className="text-cyan-400">Identity</span>
-              </h1>
-              <p className="text-slate-500 text-[10px] mt-1 tracking-[0.3em] font-bold uppercase">MANAGE ACCOUNT CREDENTIALS AND SECURITY</p>
-            </header>
+        
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
               
@@ -127,18 +122,8 @@ export default function Profile() {
                   </div>
 
                   <h3 className="text-xl font-bold text-white">{formData.firstName} {formData.lastName}</h3>
-                  <p className="text-cyan-400/70 text-[10px] font-mono tracking-widest mt-1">CORE_USER_ID: 8829-X</p>
                   
-                  <div className="mt-8 pt-8 border-t border-white/5 space-y-3">
-                    <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase">
-                      <span className="text-slate-500">Security Level</span>
-                      <span className="text-white">Standard</span>
-                    </div>
-                    <div className="flex justify-between text-[10px] font-bold tracking-widest uppercase">
-                      <span className="text-slate-500">Status</span>
-                      <span className="text-green-400">Verified</span>
-                    </div>
-                  </div>
+                  
                 </div>
 
                 <div className="bg-cyan-500/5 border border-cyan-500/20 p-6 rounded-2xl flex items-start gap-4">
