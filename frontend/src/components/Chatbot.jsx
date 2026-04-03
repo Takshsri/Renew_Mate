@@ -11,6 +11,7 @@ export default function Chatbot() {
   const [draft, setDraft] = useState({});
   const [currentStep, setCurrentStep] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState("");
+  const [originalServiceName, setOriginalServiceName] = useState(null);
   const [chat, setChat] = useState(() => {
     const saved = localStorage.getItem("chatHistory");
     return saved
@@ -88,50 +89,43 @@ export default function Chatbot() {
     setIsLoading(true);
 
    try {
-let updatedDraft = draft;
+const updatedDraft = pendingField
+  ? {
+      ...draft,
+      [pendingField]: text,
+    }
+  : draft;
 
-setDraft((prev) => {
-  updatedDraft = pendingField
-    ? {
-        ...prev,
-        [pendingField]: text,
-      }
-    : prev;
-
-  return updatedDraft;
+const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/chat`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({
+    message: text,
+    pendingAction,
+    pendingField,
+    draft: updatedDraft,
+    currentStep,
+    originalServiceName,
+  }),
 });
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/chat`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify({
-  message: text,
-  pendingAction,
-  pendingField,
-  draft: updatedDraft,
-  currentStep,
-  originalServiceName: draft.serviceName,
-}),
-  });
 
-      const data = await res.json();
-      setCurrentQuestion(data.message || "");
-      setPendingAction(data.pendingAction || null);
-      setPendingField(data.pendingField || null);
-      setInputType(data.inputType || "text");
-      setCurrentStep(data.currentStep || 0);
-      if (!data.pendingAction) {
-        setDraft({});
-        setCurrentStep(0);
-        setPendingField(null);
-        setInputType("text");
-      }
-      if (data.redirectUrl) {
-        window.open(data.redirectUrl, "_blank");
-      }
 
+const data = await res.json();
+
+setDraft(data.draft || updatedDraft);
+
+if (data.originalServiceName) {
+  setOriginalServiceName(data.originalServiceName);
+}
+
+setPendingAction(data.pendingAction || null);
+setPendingField(data.pendingField || null);
+setInputType(data.inputType || "text");
+setCurrentStep(data.currentStep || 0);
+setCurrentQuestion(data.message || "");
       let botReply = data.message || "Done.";
 
       if (data.subscriptions?.length > 0) {

@@ -111,6 +111,8 @@ if (!draft.serviceName) {
   draft.serviceName =
     parsed?.serviceName || body.originalServiceName;
 }
+console.log("RESTORED SERVICE:", body.originalServiceName);
+console.log("FINAL DRAFT:", draft);
 console.log("WIZARD DRAFT:", draft);
   // save current answer
   if (body.pendingField && body.message) {
