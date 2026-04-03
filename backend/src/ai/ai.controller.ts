@@ -112,21 +112,13 @@ if (
   }
 
   // all fields collected -> create
-if (currentStep >= questionFlow.length) {
-  const serviceName =
-    draft.serviceName || parsed.serviceName || body.serviceName;
+const isComplete = questionFlow.every((field) => draft[field]);
 
-  if (!serviceName) {
-    return {
-      message: "Subscription name missing. Please start again.",
-      pendingAction: null,
-      currentStep: 0,
-      draft: {},
-    };
-  }
+if (isComplete){
+  
 
   const subscription = await this.subscriptionService.create({
-    serviceName,
+     serviceName: draft.serviceName,
     category: draft.category,
     price: Number(draft.price),
     billingCycle: draft.billingCycle,
