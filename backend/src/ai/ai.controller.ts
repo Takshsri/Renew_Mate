@@ -168,14 +168,39 @@ if (action === "SHOW_SUBSCRIPTIONS") {
   };
 }
     // CANCEL URL MAP
-    const cancelUrls: Record<string, string> = {
-      netflix: "https://www.netflix.com/cancelplan",
-      spotify: "https://www.spotify.com/account/subscription/",
-      amazon: "https://www.amazon.com/gp/video/settings/subscriptions",
-      youtube: "https://www.youtube.com/paid_memberships",
-      disney: "https://www.disneyplus.com/account",
-      prime: "https://www.amazon.com/gp/primecentral",
-    };
+const cancelUrls: Record<string, string> = {
+  // OTT
+  netflix: "https://www.netflix.com/cancelplan",
+  spotify: "https://www.spotify.com/account/subscription/",
+  amazon: "https://www.amazon.com/gp/video/settings/subscriptions",
+  prime: "https://www.amazon.com/gp/primecentral",
+  youtube: "https://www.youtube.com/paid_memberships",
+  disney: "https://www.disneyplus.com/account",
+  hotstar: "https://help.hotstar.com/in/en/support/solutions/articles/61000278411-How-Do-I-Cancel-My-Subscription-",
+  jiohotstar: "https://help.hotstar.com/in/en/support/solutions/articles/61000278411-How-Do-I-Cancel-My-Subscription-",
+  aha: "https://www.aha.video",
+  zee5: "https://www.zee5.com/myaccount/subscription",
+  sonyliv: "https://www.sonyliv.com/cancelsubscription",
+
+  // Productivity / SaaS
+  canva: "https://www.canva.com/settings/billing",
+  adobe: "https://account.adobe.com/plans",
+  figma: "https://www.figma.com/settings/billing",
+  github: "https://github.com/settings/billing",
+  openai: "https://chatgpt.com/#settings",
+
+  // Music / Cloud
+  applemusic: "https://apps.apple.com/account/subscriptions",
+  icloud: "https://apps.apple.com/account/subscriptions",
+  googleone: "https://one.google.com/settings",
+  dropbox: "https://www.dropbox.com/account/plan",
+  onedrive: "https://account.microsoft.com/services",
+
+  // Indian OTT
+  sunnxt: "https://www.sunnxt.com",
+  erosnow: "https://erosnow.com",
+  voot: "https://www.jiocinema.com"
+};
 
     // CANCEL SUBSCRIPTION
 if (action === "CANCEL_SUBSCRIPTION") {
@@ -193,7 +218,9 @@ if (action === "CANCEL_SUBSCRIPTION") {
     };
   }
 
-  const serviceKey = parsed.serviceName.toLowerCase();
+const serviceKey = parsed.serviceName
+  .toLowerCase()
+  .replace(/\s+/g, "");
   const redirectUrl = cancelUrls[serviceKey];
 
   return {
