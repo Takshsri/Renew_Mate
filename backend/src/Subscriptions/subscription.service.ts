@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
 import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
@@ -49,7 +49,16 @@ if (renewalDate < today) {
     });
 
   }
+async findOne(id: string) {
+  const subscription = await this.prisma.subscription.findUnique({
+    where: { id },
+  });
+   if (!subscription) {
+    throw new NotFoundException("Subscription not found");
+  }
 
+  return subscription;
+}
   async findAll() {
 
     return this.prisma.subscription.findMany({

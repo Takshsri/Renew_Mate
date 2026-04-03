@@ -18,7 +18,7 @@ export class SubscriptionsController {
   @Post()
   @UseInterceptors(FileInterceptor('invoice'))
   async create(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: any,
     @Body() createSubscriptionDto: CreateSubscriptionDto,
     @Req() req: any
 
@@ -41,7 +41,10 @@ let invoiceUrl: string | undefined;
   findAll() {
     return this.subscriptionsService.findAll();
   }
-
+@Get(':id')
+findOne(@Param('id') id: string) {
+  return this.subscriptionsService.findOne(id);
+}
   @Get(':userId')
   findUserSubscriptions(@Param('userId') userId: string) {
     return this.subscriptionsService.findUserSubscriptions(userId);

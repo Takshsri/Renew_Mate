@@ -14,7 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage";
 import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
-
+import EditSubscription from "./pages/EditSubscription";
 function AppRoutes() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -67,6 +67,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="/edit-subscription/:id" element={<EditSubscription />} />
 
         <Route
           path="/profile"
