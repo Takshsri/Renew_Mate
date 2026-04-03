@@ -75,4 +75,9 @@ async update(
     invoiceUrl,
   );
 }
+//renewals
+@Get("renewals/upcoming/:userId")
+getUpcomingRenewals(@Param("userId") userId: string) {
+  return this.subscriptionsService.getUpcomingRenewals(userId);
+}
 }

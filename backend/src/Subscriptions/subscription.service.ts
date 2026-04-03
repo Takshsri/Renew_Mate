@@ -128,4 +128,25 @@ async update(
     },
   });
 }
+async getUpcomingRenewals(userId: string) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const next7Days = new Date(today);
+  next7Days.setDate(today.getDate() + 7);
+  next7Days.setHours(23, 59, 59, 999);
+
+  return this.prisma.subscription.findMany({
+    where: {
+      userId,
+      renewalDate: {
+        gte: today,
+        lte: next7Days,
+      },
+    },
+    orderBy: {
+      renewalDate: "asc",
+    },
+  });
+}
 }
