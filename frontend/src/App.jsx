@@ -39,7 +39,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/demo" element={<Demo />} />
-        <Route path="*" element={<NotFound />} />
+      
         {/* Protected Routes */}
         <Route
           path="/dashboard"
@@ -85,6 +85,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+          <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
