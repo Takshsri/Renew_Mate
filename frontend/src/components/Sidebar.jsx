@@ -77,7 +77,6 @@ export default function Sidebar() {
 
         {/* Main Navigation */}
         <nav className="flex flex-col gap-1.5 flex-grow">
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-700 mb-4 ml-2">Core System</p>
           
           {navItems.map((item) => (
             <Link
