@@ -30,7 +30,9 @@ export class DashboardService {
   const yearlySpending = subscriptions
     .filter(sub => sub.billingCycle === "YEARLY")
     .reduce((sum, sub) => sum + sub.price, 0);
-
+const weeklySpending = subscriptions
+  .filter(sub => sub.billingCycle === "WEEKLY")
+  .reduce((sum, sub) => sum + sub.price, 0);
   const today = new Date();
 
   const nextWeek = new Date();
@@ -120,7 +122,8 @@ export class DashboardService {
       expiredSubscriptions,
       upcomingRenewals,
       monthlySpending,
-      yearlySpending
+      yearlySpending,
+      weeklySpending,
     },
     suggestions
   };
