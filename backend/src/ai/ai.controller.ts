@@ -102,13 +102,16 @@ if (
   let currentStep = body.currentStep || 0;
 
   // store service name from first message
-  const draft = {
+const draft = {
   ...(body.draft || {}),
-  ...(parsed.serviceName && !body.draft?.serviceName
-    ? { serviceName: parsed.serviceName }
-    : {}),
 };
 
+// restore service name safely
+if (!draft.serviceName) {
+  draft.serviceName =
+    parsed?.serviceName || body.originalServiceName;
+}
+console.log("WIZARD DRAFT:", draft);
   // save current answer
   if (body.pendingField && body.message) {
     draft[body.pendingField] = body.message;
@@ -122,9 +125,7 @@ if (isComplete){
 
   const subscription = await this.subscriptionService.create({
     serviceName:
-    draft.serviceName ||
-    body.draft?.serviceName ||
-    body.originalServiceName,
+    draft.serviceName,
     category: draft.category,
     price: Number(draft.price),
     billingCycle: draft.billingCycle,
