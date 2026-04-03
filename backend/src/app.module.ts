@@ -11,6 +11,8 @@ import { UsersModule } from './users/users.module';
 import { SubscriptionsModule } from './Subscriptions/subscription.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RemindersModule } from './remainders/remainder.module';
+import { UploadController } from './uploads/upload.controller';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { RemindersModule } from './remainders/remainder.module';
 
 
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController,UploadController],
+  providers: [AppService,CloudinaryService],
 })
 export class AppModule {}

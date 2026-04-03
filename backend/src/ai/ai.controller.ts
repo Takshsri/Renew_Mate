@@ -82,6 +82,10 @@ if (
       question: "What is the renewal date?",
       inputType: "date",
     },
+    invoiceUrl: {
+  question: "Upload invoice",
+  inputType: "file",
+},
     notes: {
       question: "Add description",
       inputType: "textarea",
@@ -95,6 +99,7 @@ if (
     "paymentMethod",
     "startDate",
     "renewalDate",
+    "invoiceUrl",
     "notes",
   ];
 

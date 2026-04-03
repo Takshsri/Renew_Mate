@@ -164,7 +164,27 @@ setCurrentQuestion(data.message || "");
       setIsLoading(false);
     }
   };
+const handleFileUpload = async (file) => {
+  if (!file) return;
 
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/upload/invoice`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+
+  setMessage(data.url);
+};
   const renderDynamicInput = () => {
   
     switch (inputType) {
@@ -247,13 +267,14 @@ setCurrentQuestion(data.message || "");
         );
 
       case "file":
-        return (
-          <input
-            type="file"
-            onChange={(e) => setMessage(e.target.files?.[0]?.name || "")}
-            className="flex-1 text-white px-4"
-          />
-        );
+  return (
+    <input
+      type="file"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onChange={(e) => handleFileUpload(e.target.files[0])}
+      className="flex-1 text-white px-4"
+    />
+  );
 
       case "textarea":
         return (
