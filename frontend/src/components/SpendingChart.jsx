@@ -1,54 +1,62 @@
 import {
-  BarChart,
-  Bar,
+  ResponsiveContainer,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
-  CartesianGrid
+  CartesianGrid,
 } from "recharts";
 
 export default function SpendingChart({ stats }) {
+  if (!stats) return null;
 
-  const data = [
-    { name: "Monthly", amount: stats?.monthlySpending || 0 },
+  const chartData = [
+    {
+      cycle: "Weekly",
+      amount: stats.weeklySpending || 0,
+    },
+    {
+      cycle: "Monthly",
+      amount: stats.monthlySpending || 0,
+    },
+    {
+      cycle: "Yearly",
+      amount: stats.yearlySpending || 0,
+    },
   ];
 
   return (
-    <div className="bg-white/5 p-6 rounded-3xl border border-white/5 shadow-xl">
-
-      <h2 className="text-lg font-semibold mb-4 text-white">
-        Monthly Spending
+    <div className="w-full">
+      <h2 className="text-xl font-bold text-white mb-4">
+        Spending Trend
       </h2>
 
-      <div className="h-60">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data}>
-
-            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-
-            <XAxis dataKey="name" stroke="#94a3b8" />
-
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="4 4" stroke="#334155" />
+            <XAxis dataKey="cycle" stroke="#94a3b8" />
             <YAxis stroke="#94a3b8" />
-
             <Tooltip
               contentStyle={{
-                background: "#0f172a",
-                border: "none",
-                borderRadius: "10px"
+                backgroundColor: "#0f172a",
+                border: "1px solid #334155",
+                borderRadius: "12px",
               }}
             />
 
-            <Bar
+            <Line
+              type="monotone"
               dataKey="amount"
-              fill="#22d3ee"
-              radius={[10, 10, 0, 0]}
+              stroke="#22d3ee"
+              strokeWidth={4}
+              dot={{ r: 6, fill: "#22d3ee" }}
+              activeDot={{ r: 8 }}
             />
-
-          </BarChart>
+          </LineChart>
         </ResponsiveContainer>
       </div>
-
     </div>
   );
 }
