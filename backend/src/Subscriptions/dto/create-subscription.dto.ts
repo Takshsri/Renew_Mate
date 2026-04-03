@@ -1,15 +1,19 @@
-import { IsString, IsNumber, IsEnum, IsDateString, IsOptional } from 'class-validator';
-
-export enum BillingCycle {
-  MONTHLY = 'MONTHLY',
-  YEARLY = 'YEARLY',
-  WEEKLY = 'WEEKLY'
-}
+import { BillingCycle, SubscriptionStatus } from '@prisma/client';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsDateString,
+  IsEnum
+} from 'class-validator';
 
 export class CreateSubscriptionDto {
-
   @IsString()
   serviceName: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
 
   @IsNumber()
   price: number;
@@ -18,15 +22,27 @@ export class CreateSubscriptionDto {
   billingCycle: BillingCycle;
 
   @IsDateString()
-  startDate: Date;
+  startDate: string;
 
   @IsDateString()
-  renewalDate: Date;
+  renewalDate: string;
 
+  @IsOptional()
   @IsString()
-  userId: string;
+  paymentMethod?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
+
   @IsOptional()
   @IsString()
   invoiceUrl?: string;
 
+  @IsOptional()
+  @IsEnum(SubscriptionStatus)
+  status?: SubscriptionStatus;
+
+  @IsString()
+  userId: string;
 }

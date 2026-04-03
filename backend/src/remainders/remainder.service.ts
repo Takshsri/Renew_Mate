@@ -17,6 +17,7 @@ async getUpcomingRenewals() {
   return this.prisma.subscription.findMany({
     where: {
       renewalDate: {
+        
         gte: today,
         lte: reminderWindow,
       },

@@ -19,7 +19,7 @@ export class AiController {
     const userMessage = body.message.toLowerCase();
 
     const greetings = ["hi", "hello", "hey", "good morning", "good evening"];
-
+    
     if (greetings.includes(userMessage)) {
       return {
         message:
@@ -47,64 +47,138 @@ export class AiController {
 
     const action = parsed.action;
 
-    // ADD SUBSCRIPTION
-if (action === "ADD_SUBSCRIPTION") {
 
-  if (!parsed.serviceName || !parsed.price || !parsed.billingCycle) {
+const pendingField = body.pendingField;
+
+if (body.pendingAction === "ADD_SUBSCRIPTION" && pendingField) {
+  parsed = {
+    action: "ADD_SUBSCRIPTION",
+    ...(body.draft || {}),
+    [pendingField]: body.message
+  };
+} else {
+  const aiResponse = await this.aiService.extractSubscription(body.message);
+
+  try {
+    parsed = JSON.parse(
+      aiResponse.replace(/```json/g, "").replace(/```/g, "").trim()
+    );
+  } catch {
     return {
-      message:
-        "I need more details to add this subscription.\n\nExample:\nAdd Netflix monthly 499"
+      message: aiResponse
     };
   }
+}
+    // ADD SUBSCRIPTION
 
-  const startDate = new Date();
-  let renewalDate = new Date(startDate);
+if (action === "ADD_SUBSCRIPTION") {
+  const fieldMeta = {
+    serviceName: {
+      question: "What is the service name?",
+      inputType: "text"
+    },
+    category: {
+      question: "What is the category?",
+      inputType: "text"
+    },
+    price: {
+      question: "What is the subscription price?",
+      inputType: "number"
+    },
+    billingCycle: {
+      question: "Choose the billing cycle",
+      inputType: "billingCycle"
+    },
+    paymentMethod: {
+      question: "Choose the payment method",
+      inputType: "paymentMethod"
+    },
+    startDate: {
+      question: "What is the start date?",
+      inputType: "date"
+    },
+    renewalDate: {
+      question: "What is the renewal date?",
+      inputType: "date"
+    },
+    invoiceUrl: {
+      question: "Upload invoice or enter invoice URL",
+      inputType: "file"
+    },
+    notes: {
+      question: "Add notes about this subscription",
+      inputType: "textarea"
+    }
+  };
 
-  if (parsed.billingCycle === "MONTHLY") {
-    renewalDate.setMonth(startDate.getMonth() + 1);
-  }
+  const requiredFields = [
+    "serviceName",
+    "category",
+    "price",
+    "billingCycle",
+    "paymentMethod",
+    "startDate",
+    "renewalDate",
+    "invoiceUrl",
+    "notes"
+  ];
 
-  if (parsed.billingCycle === "YEARLY") {
-    renewalDate.setFullYear(startDate.getFullYear() + 1);
-  }
+  const missingField = requiredFields.find(
+    (field) => !parsed[field]
+  );
 
-  if (parsed.billingCycle === "WEEKLY") {
-    renewalDate.setDate(startDate.getDate() + 7);
+  if (missingField) {
+    return {
+      message: fieldMeta[missingField].question,
+      pendingAction: "ADD_SUBSCRIPTION",
+      pendingField: missingField,
+      inputType: fieldMeta[missingField].inputType
+    };
   }
 
   const subscription = await this.subscriptionService.create({
     serviceName: parsed.serviceName,
+    category: parsed.category,
     price: Number(parsed.price),
     billingCycle: parsed.billingCycle,
-    startDate,
-    renewalDate,
+    paymentMethod: parsed.paymentMethod,
+    invoiceUrl: parsed.invoiceUrl,
+    notes: parsed.notes,
+    startDate: new Date(parsed.startDate).toISOString(),
+    renewalDate: new Date(parsed.renewalDate).toISOString(),
     userId
   });
 
   return {
-    message: `${parsed.serviceName} subscription added successfully.`,
+    message: `${parsed.serviceName} subscription added successfully ✅`,
     subscription
   };
 }
-    // SHOW SUBSCRIPTIONS
-    if (action === "SHOW_SUBSCRIPTIONS") {
 
-      const subscriptions =
-        await this.subscriptionService.findUserSubscriptions(userId);
+    //Show Subscriptions
+if (action === "SHOW_SUBSCRIPTIONS") {
+  const subscriptions =
+    await this.subscriptionService.findUserSubscriptions(userId);
 
-      if (subscriptions.length === 0) {
-        return {
-          message:
-            "You currently have no subscriptions.\nTry adding one like: 'Add Spotify monthly 119'."
-        };
-      }
+  if (subscriptions.length === 0) {
+    return {
+      message:
+        "You currently have no subscriptions.\nTry adding one like: 'Add Spotify monthly 119'."
+    };
+  }
 
-      return {
-        message: "Here are your subscriptions:",
-        subscriptions
-      };
-    }
+  const subscriptionList = subscriptions
+    .map(
+      (sub, index) =>
+        `${index + 1}. ${sub.serviceName} - ₹${sub.price} (${sub.billingCycle})`
+    )
+    .join("\n");
 
+  return {
+    message: `📋 Here are your subscriptions:\n\n${subscriptionList}`,
+    subscriptions
+  };
+}
     // CANCEL URL MAP
     const cancelUrls: Record<string, string> = {
       netflix: "https://www.netflix.com/cancelplan",
