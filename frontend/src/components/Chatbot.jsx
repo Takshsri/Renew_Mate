@@ -179,8 +179,8 @@ setDraft((prev) => {
       {["Entertainment", "Music", "Productivity", "Cloud"].map((cat) => (
         <button
           key={cat}
-          onClick={() => setMessage(cat),
-            sendMessage(cat)
+          onClick={() => setMessage(cat)
+           
           }
           className={`px-3 py-2 rounded-lg border ${
             message === cat
@@ -235,8 +235,8 @@ setDraft((prev) => {
               (method) => (
                 <button
                   key={method}
-                  onClick={() => setMessage(method),
-                    sendMessage(method)
+                  onClick={() => setMessage(method)
+                    
                   }
                   className={`px-3 py-2 rounded-lg border ${
                     message === method
