@@ -48,71 +48,50 @@ export class AiController {
     const action = parsed.action;
 
 
-const pendingField = body.pendingField;
 
-if (body.pendingAction === "ADD_SUBSCRIPTION" && pendingField) {
-  parsed = {
-    action: "ADD_SUBSCRIPTION",
-    ...(body.draft || {}),
-    [pendingField]: body.message
-  };
-} else {
-  const aiResponse = await this.aiService.extractSubscription(body.message);
-
-  try {
-    parsed = JSON.parse(
-      aiResponse.replace(/```json/g, "").replace(/```/g, "").trim()
-    );
-  } catch {
-    return {
-      message: aiResponse
-    };
-  }
-}
     // ADD SUBSCRIPTION
 
-if (action === "ADD_SUBSCRIPTION") {
+// ADD SUBSCRIPTION WIZARD
+if (
+  action === "ADD_SUBSCRIPTION" ||
+  body.pendingAction === "ADD_SUBSCRIPTION"
+) {
   const fieldMeta = {
-    serviceName: {
-      question: "What is the service name?",
-      inputType: "text"
-    },
     category: {
       question: "What is the category?",
-      inputType: "text"
+      inputType: "category",
     },
     price: {
-      question: "What is the subscription price?",
-      inputType: "number"
+      question: "What is the price?",
+      inputType: "number",
     },
     billingCycle: {
-      question: "Choose the billing cycle",
-      inputType: "billingCycle"
+      question: "Choose billing cycle",
+      inputType: "billingCycle",
     },
     paymentMethod: {
-      question: "Choose the payment method",
-      inputType: "paymentMethod"
+      question: "Choose payment method",
+      inputType: "paymentMethod",
     },
     startDate: {
       question: "What is the start date?",
-      inputType: "date"
+      inputType: "date",
     },
     renewalDate: {
       question: "What is the renewal date?",
-      inputType: "date"
+      inputType: "date",
     },
     invoiceUrl: {
-      question: "Upload invoice or enter invoice URL",
-      inputType: "file"
+      question: "Upload invoice",
+      inputType: "file",
     },
     notes: {
-      question: "Add notes about this subscription",
-      inputType: "textarea"
-    }
+      question: "Add description",
+      inputType: "textarea",
+    },
   };
 
-  const requiredFields = [
-    "serviceName",
+  const questionFlow = [
     "category",
     "price",
     "billingCycle",
@@ -120,41 +99,50 @@ if (action === "ADD_SUBSCRIPTION") {
     "startDate",
     "renewalDate",
     "invoiceUrl",
-    "notes"
+    "notes",
   ];
 
-  const missingField = requiredFields.find(
-    (field) => !parsed[field]
-  );
+  const draft = body.draft || {};
 
-  if (missingField) {
+if (!draft.serviceName && parsed.serviceName) {
+  draft.serviceName = parsed.serviceName;
+}
+  let currentStep = body.currentStep || 0;
+  if (body.pendingField) {
+    draft[body.pendingField] = body.message;
+  }
+
+  if (currentStep < questionFlow.length) {
+    const nextField = questionFlow[currentStep];
+
     return {
-      message: fieldMeta[missingField].question,
+      message: fieldMeta[nextField].question,
       pendingAction: "ADD_SUBSCRIPTION",
-      pendingField: missingField,
-      inputType: fieldMeta[missingField].inputType
+      pendingField: nextField,
+      inputType: fieldMeta[nextField].inputType,
+      currentStep: currentStep + 1,
+      draft,
     };
   }
 
-  const subscription = await this.subscriptionService.create({
-    serviceName: parsed.serviceName,
-    category: parsed.category,
-    price: Number(parsed.price),
-    billingCycle: parsed.billingCycle,
-    paymentMethod: parsed.paymentMethod,
-    invoiceUrl: parsed.invoiceUrl,
-    notes: parsed.notes,
-    startDate: new Date(parsed.startDate).toISOString(),
-    renewalDate: new Date(parsed.renewalDate).toISOString(),
-    userId
-  });
+const subscription = await this.subscriptionService.create({
+  serviceName: draft.serviceName,
+  category: draft.category,
+  price: Number(draft.price),
+  billingCycle: draft.billingCycle,
+  paymentMethod: draft.paymentMethod,
+  invoiceUrl: draft.invoiceUrl,
+  notes: draft.notes,
+  startDate: new Date(draft.startDate).toISOString(),
+  renewalDate: new Date(draft.renewalDate).toISOString(),
+  userId,
+});
 
   return {
-    message: `${parsed.serviceName} subscription added successfully ✅`,
-    subscription
+    message: `${subscription.serviceName} added successfully ✅`,
+    subscription,
   };
 }
-
     //Show Subscriptions
 if (action === "SHOW_SUBSCRIPTIONS") {
   const subscriptions =
