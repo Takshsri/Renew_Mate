@@ -129,7 +129,9 @@ If you cannot understand the message return:
   }
     async getSuggestion(subscription: any) {
     try {
-      const response = await axios.post('http://127.0.0.1:5001/predict', {
+      const baseUrl = process.env.ML_API_URL;
+      const response = await axios.post(
+       `${baseUrl}/predict`, {
         serviceName: subscription.serviceName,
         category: subscription.category,
         billingCycle: subscription.billingCycle,
