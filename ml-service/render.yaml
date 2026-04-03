@@ -3,5 +3,6 @@ services:
     name: renewmate-ml-api
     env: python
     plan: free
+    rootDir: ml-service
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn predict_api:app
