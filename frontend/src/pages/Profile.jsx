@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { Menu, X, User, Mail, Phone, Lock, ShieldCheck, Save } from "lucide-react";
-
+import toast from "react-hot-toast";
 export default function Profile() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,12 +56,12 @@ export default function Profile() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Profile updated successfully");
+        toast.success("Profile updated successfully");
       } else {
-        alert(data.message);
+        toast.error(Array.isArray(data.message) ? data.message[0] : data.message);
       }
     } catch (error) {
-      alert("Update failed");
+      toast.error("Update failed");
     }
   };
 

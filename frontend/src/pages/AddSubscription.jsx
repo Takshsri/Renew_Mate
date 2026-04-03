@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Calendar, CreditCard, Tag, IndianRupee, Activity, FileText, PlusCircle, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
 export default function AddSubscriptionForm() {
 const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -49,7 +51,7 @@ const navigate = useNavigate();
 
       if (!res.ok) throw new Error("Failed to create subscription");
 
-      alert("Subscription added successfully");
+      toast.success("Subscription added successfully 🎉");
       navigate("/dashboard");
       setForm({
         serviceName: "", category: "", price: "", billingCycle: "MONTHLY",
@@ -60,7 +62,7 @@ const navigate = useNavigate();
 
     } catch (err) {
       console.error(err);
-      alert("Something went wrong");
+      toast.error("Failed to add subscription");
     }
 
   };

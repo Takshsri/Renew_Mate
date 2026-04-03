@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Mail, Phone, Lock, UserPlus } from "lucide-react";
 import logoImage from "../images/dashboard.png";
-
+import toast from "react-hot-toast";
 export default function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -23,14 +23,14 @@ export default function Register() {
 
       const data = await res.json();
       if (res.ok) {
-        alert("Account created successfully");
+        toast.success("Account created successfully");
         navigate("/login");
       } else {
-        alert(data.message);
+        toast.error(Array.isArray(data.message) ? data.message[0] : data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Registration failed");
+      toast.error("Registration failed");
     }
   };
 

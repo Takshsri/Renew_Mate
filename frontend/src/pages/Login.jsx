@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../api/api";
 import { ArrowLeft, Mail, Lock, LogIn } from "lucide-react";
 import logoImage from "../images/dashboard.png";
-
+import toast from "react-hot-toast";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,11 +23,11 @@ export default function Login() {
         localStorage.setItem("token", data.access_token);
         navigate("/dashboard");
       } else {
-        alert(Array.isArray(data.message) ? data.message[0] : data.message);
+        toast.error(Array.isArray(data.message) ? data.message[0] : data.message);
       }
     } catch (error) {
       console.error(error);
-      alert("Login failed");
+      toast.error("Login failed");
     }
   };
 

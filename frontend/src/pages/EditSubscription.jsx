@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   Calendar,
   CreditCard,
@@ -98,11 +99,11 @@ export default function EditSubscription() {
 
       if (!res.ok) throw new Error("Failed to update");
 
-      alert("Subscription updated successfully");
+      toast.success("Subscription updated successfully");
       navigate("/dashboard");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+      toast.error("Failed to update subscription");
     }
   };
 

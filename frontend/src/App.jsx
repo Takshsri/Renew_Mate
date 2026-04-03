@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
 
 
 import Loader from "./components/Loader";
@@ -32,7 +33,10 @@ function AppRoutes() {
   return (
     <>
       {loading && <Loader />}
-
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
       <Routes location={location}>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />

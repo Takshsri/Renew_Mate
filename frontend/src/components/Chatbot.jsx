@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 
 const BOT_ICON_URL =
   "https://cdn-icons-png.flaticon.com/512/8943/8943377.png";
@@ -55,7 +56,7 @@ export default function Chatbot() {
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Speech recognition not supported in this browser.");
+      toast.error("Speech recognition not supported in this browser.");
       return;
     }
 
