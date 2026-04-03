@@ -1,103 +1,124 @@
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  BarChart,
-  Bar,
-  Legend,
-} from "recharts";
+import { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import SubscriptionList from "../components/SubscriptionList";
+import SpendingChart from "../components/SpendingChart";
+import { API_URL } from "../api/api";
+import { MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
 
-export default function SpendingChart({ subscriptions = [] }) {
-  const monthly = subscriptions.filter((s) => s.billingCycle === "MONTHLY").length;
-  const yearly = subscriptions.filter((s) => s.billingCycle === "YEARLY").length;
-  const weekly = subscriptions.filter((s) => s.billingCycle === "WEEKLY").length;
+export default function Dashboard() {
+  const [stats, setStats] = useState(null);
 
-  const monthlySpend = subscriptions
-    .filter((s) => s.billingCycle === "MONTHLY")
-    .reduce((sum, s) => sum + Number(s.price), 0);
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const res = await fetch(`${API_URL}/dashboard`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-  const yearlySpend = subscriptions
-    .filter((s) => s.billingCycle === "YEARLY")
-    .reduce((sum, s) => sum + Number(s.price), 0);
+        const data = await res.json();
 
-  const weeklySpend = subscriptions
-    .filter((s) => s.billingCycle === "WEEKLY")
-    .reduce((sum, s) => sum + Number(s.price), 0);
+        if (res.ok) {
+          setStats(data.stats);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-  const cycleData = [
-    { name: "Weekly", count: weekly, spend: weeklySpend },
-    { name: "Monthly", count: monthly, spend: monthlySpend },
-    { name: "Yearly", count: yearly, spend: yearlySpend },
-  ];
-
-  const trendData = subscriptions
-    .slice(0, 12)
-    .map((sub, index) => ({
-      name: sub.serviceName.slice(0, 8),
-      price: Number(sub.price),
-      index: index + 1,
-    }))
-    .sort((a, b) => a.price - b.price);
+    fetchDashboard();
+  }, []);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold text-white mb-4">
-          Subscription Cycle Distribution
-        </h2>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={cycleData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="name" stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0f172a",
-                  border: "1px solid #334155",
-                  borderRadius: "12px",
-                }}
-              />
-              <Legend />
-              <Bar dataKey="count" fill="#22d3ee" radius={[8, 8, 0, 0]} />
-              <Bar dataKey="spend" fill="#818cf8" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+    <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar />
 
-      <div>
-        <h2 className="text-xl font-bold text-white mb-4">
-          Price Trend by Subscription
-        </h2>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="name" stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0f172a",
-                  border: "1px solid #334155",
-                  borderRadius: "12px",
-                }}
-              />
-              <Line
-                type="monotone"
-                dataKey="price"
-                stroke="#22d3ee"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+      {/* Main Area */}
+      <div className="flex-1 flex flex-col h-screen overflow-hidden lg:pl-64 transition-all duration-300">
+        <Navbar />
+
+        <main className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 relative">
+          <div className="max-w-7xl mx-auto w-full">
+
+            {/* Header */}
+            <header className="mb-8 mt-14 lg:mt-0 flex justify-between items-center">
+              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white italic uppercase">
+                Command <span className="text-cyan-400">Center</span>
+              </h1>
+            </header>
+
+            {/* Stats Cards */}
+            {stats ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                <StatCard label="Total" value={stats.totalSubscriptions} />
+                <StatCard label="Active" value={stats.activeSubscriptions} />
+                <StatCard label="Expired" value={stats.expiredSubscriptions || 0} />
+                <StatCard label="Upcoming" value={stats.upcomingRenewals} />
+                <StatCard label="Monthly Spend" value={`₹${stats.monthlySpending}`} highlight />
+              </div>
+            ) : (
+              <div className="text-cyan-400 text-xs font-bold animate-pulse uppercase tracking-widest">
+                Loading Dashboard Data...
+              </div>
+            )}
+
+            {/* Chart + Subscriptions */}
+            <div className="space-y-6 pb-24">
+
+              <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl overflow-hidden">
+                <SpendingChart stats={stats} />
+              </div>
+
+              <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl">
+                <SubscriptionList />
+              </div>
+
+            </div>
+          </div>
+        </main>
+
+        {/* Floating AI Assistant */}
+        <Link
+          to="/chat"
+          className="fixed bottom-8 right-8 z-50 group flex items-center gap-3 transition-transform hover:scale-105"
+        >
+          <span className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-2xl">
+            Ask AI Assistant
+          </span>
+
+          <div className="relative">
+            <div className="absolute -inset-2 bg-cyan-500/20 rounded-full blur-xl animate-pulse"></div>
+
+            <div className="relative bg-[#0d0d12] border border-white/10 p-4 rounded-full shadow-2xl flex items-center justify-center">
+              <MessageSquare className="text-cyan-400" size={28} />
+
+              <div className="absolute top-0 right-0 w-3.5 h-3.5 bg-cyan-500 border-2 border-[#050508] rounded-full"></div>
+            </div>
+          </div>
+        </Link>
       </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value, highlight }) {
+  return (
+    <div className="bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
+      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
+        {label}
+      </p>
+
+      <h2
+        className={`text-2xl font-bold ${
+          highlight ? "text-cyan-400" : "text-white"
+        }`}
+      >
+        {value}
+      </h2>
     </div>
   );
 }
