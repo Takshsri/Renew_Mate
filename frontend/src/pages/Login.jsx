@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../api/api";
-import { ArrowLeft, Mail, Lock, LogIn } from "lucide-react";
+import { ArrowLeft, Mail, Lock, LogIn, Eye, EyeOff } from "lucide-react";
 import logoImage from "../images/dashboard.png";
 import toast from "react-hot-toast";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -94,25 +95,28 @@ export default function Login() {
             </div>
 
             {/* Password Field */}
-            <div className="space-y-2">
-              <div className="flex justify-between items-center px-1">
-                <label className="text-xs font-black uppercase tracking-widest text-slate-400">Password</label>
-                <Link to="/forgot" className="text-[10px] font-black uppercase tracking-tighter text-violet-400 hover:text-white transition">Forgot?</Link>
-              </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
-                  <Lock size={18} />
-                </div>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all text-sm"
-                />
-              </div>
-            </div>
+<div className="relative group">
+  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+    <Lock size={18} />
+  </div>
+
+  <input
+    type={showPassword ? "text" : "password"}
+    required
+    placeholder="••••••••"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    className="w-full bg-white/5 border border-white/10 p-4 pl-12 pr-12 rounded-2xl focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all text-sm"
+  />
+
+  <button
+    type="button"
+    onClick={() => setShowPassword(!showPassword)}
+    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-violet-400 transition-colors"
+  >
+    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+  </button>
+</div>
 
             {/* Submit Button */}
             <button 
