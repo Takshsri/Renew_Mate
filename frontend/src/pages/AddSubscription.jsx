@@ -25,48 +25,59 @@ const navigate = useNavigate();
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  const toastId = toast.loading("Adding subscription...");
 
-    const formData = new FormData();
+  const formData = new FormData();
 
-    Object.keys(form).forEach(key => {
-      formData.append(key, form[key]);
+  Object.keys(form).forEach((key) => {
+    formData.append(key, form[key]);
+  });
+
+  if (invoiceFile) {
+    formData.append("invoice", invoiceFile);
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/subscriptions`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
     });
 
-    if (invoiceFile) {
-      formData.append("invoice", invoiceFile);
-    }
+    if (!res.ok) throw new Error("Failed to create subscription");
 
-    try {
+    toast.success("Subscription added successfully 🎉", {
+      id: toastId,
+    });
 
-      const res = await fetch(`${API_URL}/subscriptions`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        },
-        body: formData
-      });
+    navigate("/dashboard");
 
-      if (!res.ok) throw new Error("Failed to create subscription");
+    setForm({
+      serviceName: "",
+      category: "",
+      price: "",
+      billingCycle: "MONTHLY",
+      startDate: "",
+      renewalDate: "",
+      paymentMethod: "",
+      status: "ACTIVE",
+      notes: "",
+    });
 
-      toast.success("Subscription added successfully 🎉");
-      navigate("/dashboard");
-      setForm({
-        serviceName: "", category: "", price: "", billingCycle: "MONTHLY",
-        startDate: "", renewalDate: "", paymentMethod: "", status: "ACTIVE", notes: ""
-      });
+    setInvoiceFile(null);
+  } catch (err) {
+    console.error(err);
 
-      setInvoiceFile(null);
-
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to add subscription");
-    }
-
-  };
-
+    toast.error("Failed to add subscription", {
+      id: toastId,
+    });
+  }
+};
   const inputStyle = "w-full bg-slate-800/60 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all text-sm";
   const labelStyle = "block text-[10px] font-bold text-cyan-500 uppercase tracking-widest mb-1.5 ml-1";
   const iconStyle = "absolute left-3 top-[34px] w-4 h-4 text-slate-400";

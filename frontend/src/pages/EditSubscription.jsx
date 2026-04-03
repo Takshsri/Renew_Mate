@@ -36,38 +36,46 @@ export default function EditSubscription() {
     fetchSubscription();
   }, []);
 
-  const fetchSubscription = async () => {
-    try {
-      const res = await fetch(`${API_URL}/subscriptions/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+const fetchSubscription = async () => {
+  const toastId = toast.loading("Loading subscription...");
 
-      const data = await res.json();
-      console.log("Fetched data:", data);
+  try {
+    const res = await fetch(`${API_URL}/subscriptions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
-      setForm({
-        serviceName: data.serviceName || "",
-        category: data.category || "",
-        price: data.price || "",
-        billingCycle: data.billingCycle || "MONTHLY",
-        startDate: data.startDate
-          ? new Date(data.startDate).toISOString().split("T")[0]
-          : "",
-        renewalDate: data.renewalDate
-          ? new Date(data.renewalDate).toISOString().split("T")[0]
-          : "",
-        paymentMethod: data.paymentMethod || "",
-        status: data.status || "ACTIVE",
-        notes: data.notes || "",
-        invoiceUrl: data.invoiceUrl || "",
-      });
-    } catch (error) {
-      console.error("Error fetching subscription:", error);
-    }
-  };
+    const data = await res.json();
 
+    setForm({
+      serviceName: data.serviceName || "",
+      category: data.category || "",
+      price: data.price || "",
+      billingCycle: data.billingCycle || "MONTHLY",
+      startDate: data.startDate
+        ? new Date(data.startDate).toISOString().split("T")[0]
+        : "",
+      renewalDate: data.renewalDate
+        ? new Date(data.renewalDate).toISOString().split("T")[0]
+        : "",
+      paymentMethod: data.paymentMethod || "",
+      status: data.status || "ACTIVE",
+      notes: data.notes || "",
+      invoiceUrl: data.invoiceUrl || "",
+    });
+
+    toast.success("Loaded successfully", {
+      id: toastId,
+    });
+  } catch (error) {
+    console.error("Error fetching subscription:", error);
+
+    toast.error("Failed to load subscription", {
+      id: toastId,
+    });
+  }
+};
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -75,38 +83,45 @@ export default function EditSubscription() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const formData = new FormData();
+  const toastId = toast.loading("Updating subscription...");
 
-    Object.keys(form).forEach((key) => {
-      formData.append(key, form[key]);
+  const formData = new FormData();
+
+  Object.keys(form).forEach((key) => {
+    formData.append(key, form[key]);
+  });
+
+  if (invoiceFile) {
+    formData.append("invoice", invoiceFile);
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/subscriptions/${id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: formData,
     });
 
-    if (invoiceFile) {
-      formData.append("invoice", invoiceFile);
-    }
+    if (!res.ok) throw new Error("Failed to update");
 
-    try {
-      const res = await fetch(`${API_URL}/subscriptions/${id}`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: formData,
-      });
+    toast.success("Subscription updated successfully ✅", {
+      id: toastId,
+    });
 
-      if (!res.ok) throw new Error("Failed to update");
+    navigate("/dashboard");
+  } catch (error) {
+    console.error(error);
 
-      toast.success("Subscription updated successfully");
-      navigate("/dashboard");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update subscription");
-    }
-  };
-
+    toast.error("Failed to update subscription", {
+      id: toastId,
+    });
+  }
+};
   const inputStyle =
     "w-full bg-slate-800/60 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm";
   const labelStyle =

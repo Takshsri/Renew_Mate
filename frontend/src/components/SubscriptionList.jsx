@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { API_URL } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 export default function SubscriptionList() {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,39 @@ export default function SubscriptionList() {
       setLoading(false);
     }
   };
+const fetchSubscriptions = async () => {
+  const toastId = toast.loading("Fetching subscriptions...");
 
+  try {
+    const res = await fetch(`${API_URL}/subscriptions`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setSubscriptions(data);
+
+      toast.success("Subscriptions loaded ✅", {
+        id: toastId,
+      });
+    } else {
+      toast.error("Failed to fetch subscriptions", {
+        id: toastId,
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching subscriptions:", error);
+
+    toast.error("Something went wrong", {
+      id: toastId,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
   const getDaysLeft = (date) => {
     const today = new Date();
     const renewal = new Date(date);
