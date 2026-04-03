@@ -27,23 +27,24 @@ export class AiController {
       };
     }
 
-    const aiResponse = await this.aiService.extractSubscription(body.message);
+let parsed: any = {};
 
-    let parsed: any;
+if (!body.pendingAction) {
+  const aiResponse = await this.aiService.extractSubscription(body.message);
 
-    try {
-      const cleaned = aiResponse
-        .replace(/```json/g, '')
-        .replace(/```/g, '')
-        .trim();
+  try {
+    const cleaned = aiResponse
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-      parsed = JSON.parse(cleaned);
-
-    } catch {
-      return {
-        message: aiResponse
-      };
-    }
+    parsed = JSON.parse(cleaned);
+  } catch {
+    return {
+      message: aiResponse,
+    };
+  }
+}
 
     const action = parsed.action;
 
