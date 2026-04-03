@@ -9,7 +9,8 @@ export default function Chatbot() {
   const [pendingField, setPendingField] = useState(null);
   const [inputType, setInputType] = useState("text");
   const [draft, setDraft] = useState({});
-
+  const [currentStep, setCurrentStep] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState("");
   const [chat, setChat] = useState(() => {
     const saved = localStorage.getItem("chatHistory");
     return saved
@@ -106,16 +107,23 @@ export default function Chatbot() {
       message: text,
       pendingAction,
       pendingField,
-      draft: updatedDraft
+      draft: updatedDraft,
+      currentStep,
     }),
   });
 
       const data = await res.json();
-
+      setCurrentQuestion(data.message || "");
       setPendingAction(data.pendingAction || null);
       setPendingField(data.pendingField || null);
       setInputType(data.inputType || "text");
-
+      setCurrentStep(data.currentStep || 0);
+      if (!data.pendingAction) {
+        setDraft({});
+        setCurrentStep(0);
+        setPendingField(null);
+        setInputType("text");
+      }
       if (data.redirectUrl) {
         window.open(data.redirectUrl, "_blank");
       }
@@ -160,7 +168,26 @@ export default function Chatbot() {
   };
 
   const renderDynamicInput = () => {
+  
     switch (inputType) {
+      case "category":
+  return (
+    <div className="flex-1 flex gap-2 px-4 flex-wrap">
+      {["Entertainment", "Music", "Productivity", "Cloud"].map((cat) => (
+        <button
+          key={cat}
+          onClick={() => setMessage(cat)}
+          className={`px-3 py-2 rounded-lg border ${
+            message === cat
+              ? "bg-cyan-500 text-black"
+              : "bg-white/5 text-white border-white/10"
+          }`}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  );
       case "number":
         return (
           <input
@@ -316,28 +343,34 @@ export default function Chatbot() {
 
       <div className="px-4 sm:px-6 pb-8 pt-4">
         <div className="max-w-4xl mx-auto">
-          <div className="relative flex items-center bg-[#0d0d12] border border-white/10 rounded-2xl p-2 min-h-[70px]">
-            <button
-              onClick={startListening}
-              className={`p-3 rounded-xl ${
-                isListening
-                  ? "text-red-500 bg-red-500/10"
-                  : "text-slate-500 hover:text-white"
-              }`}
-            >
-              🎤
-            </button>
+<div className="relative flex items-center bg-[#0d0d12] border border-white/10 rounded-2xl p-2 min-h-[70px]">
+  <button
+    onClick={startListening}
+    className={`p-3 rounded-xl ${
+      isListening
+        ? "text-red-500 bg-red-500/10"
+        : "text-slate-500 hover:text-white"
+    }`}
+  >
+    🎤
+  </button>
 
-            {renderDynamicInput()}
+  {pendingAction && (
+    <div className="absolute -top-8 left-2 text-sm text-cyan-400">
+      {currentQuestion}
+    </div>
+  )}
 
-            <button
-              onClick={() => sendMessage()}
-              disabled={!message.trim() || isLoading}
-              className="px-6 py-2 bg-white text-black font-bold text-xs uppercase rounded-xl hover:bg-cyan-400 disabled:opacity-20"
-            >
-              Send
-            </button>
-          </div>
+  {renderDynamicInput()}
+
+  <button
+    onClick={() => sendMessage()}
+    disabled={!message.trim() || isLoading}
+    className="px-6 py-2 bg-white text-black font-bold text-xs uppercase rounded-xl hover:bg-cyan-400 disabled:opacity-20"
+  >
+    Send
+  </button>
+</div>
         </div>
       </div>
     </div>
