@@ -88,15 +88,18 @@ export default function Chatbot() {
     setIsLoading(true);
 
    try {
-  const updatedDraft = pendingField
+let updatedDraft = draft;
+
+setDraft((prev) => {
+  updatedDraft = pendingField
     ? {
-        ...draft,
-        [pendingField]: text
+        ...prev,
+        [pendingField]: text,
       }
-    : draft;
+    : prev;
 
-  setDraft(updatedDraft);
-
+  return updatedDraft;
+});
   const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/chat`, {
     method: "POST",
     headers: {
@@ -104,12 +107,12 @@ export default function Chatbot() {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     body: JSON.stringify({
-      message: text,
-      pendingAction,
-      pendingField,
-      draft: updatedDraft,
-      currentStep,
-    }),
+  message: text,
+  pendingAction,
+  pendingField,
+  draft: updatedDraft,
+  currentStep,
+}),
   });
 
       const data = await res.json();
@@ -176,7 +179,9 @@ export default function Chatbot() {
       {["Entertainment", "Music", "Productivity", "Cloud"].map((cat) => (
         <button
           key={cat}
-          onClick={() => setMessage(cat)}
+          onClick={() => setMessage(cat),
+            sendMessage(cat)
+          }
           className={`px-3 py-2 rounded-lg border ${
             message === cat
               ? "bg-cyan-500 text-black"
@@ -230,7 +235,9 @@ export default function Chatbot() {
               (method) => (
                 <button
                   key={method}
-                  onClick={() => setMessage(method)}
+                  onClick={() => setMessage(method),
+                    sendMessage(method)
+                  }
                   className={`px-3 py-2 rounded-lg border ${
                     message === method
                       ? "bg-cyan-500 text-black"

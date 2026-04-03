@@ -111,29 +111,40 @@ if (
   }
 
   // all fields collected -> create
-  if (currentStep >= questionFlow.length) {
-    const subscription = await this.subscriptionService.create({
-      serviceName: draft.serviceName,
-      category: draft.category,
-      price: Number(draft.price),
-      billingCycle: draft.billingCycle,
-      paymentMethod: draft.paymentMethod,
-      notes: draft.notes,
-      startDate: new Date(draft.startDate).toISOString(),
-      renewalDate: new Date(draft.renewalDate).toISOString(),
-      userId,
-    });
+if (currentStep >= questionFlow.length) {
+  const serviceName =
+    draft.serviceName || parsed.serviceName || body.serviceName;
 
+  if (!serviceName) {
     return {
-      message: `${subscription.serviceName} added successfully ✅`,
-      subscription,
+      message: "Subscription name missing. Please start again.",
       pendingAction: null,
-      pendingField: null,
       currentStep: 0,
       draft: {},
     };
   }
 
+  const subscription = await this.subscriptionService.create({
+    serviceName,
+    category: draft.category,
+    price: Number(draft.price),
+    billingCycle: draft.billingCycle,
+    paymentMethod: draft.paymentMethod,
+    notes: draft.notes,
+    startDate: new Date(draft.startDate).toISOString(),
+    renewalDate: new Date(draft.renewalDate).toISOString(),
+    userId,
+  });
+
+  return {
+    message: `${subscription.serviceName} added successfully ✅`,
+    subscription,
+    pendingAction: null,
+    pendingField: null,
+    currentStep: 0,
+    draft: {},
+  };
+}
   const nextField = questionFlow[currentStep];
 
   return {
