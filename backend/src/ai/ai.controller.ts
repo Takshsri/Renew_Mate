@@ -177,8 +177,7 @@ const cancelUrls: Record<string, string> = {
   youtube: "https://www.youtube.com/paid_memberships",
   disney: "https://www.disneyplus.com/account",
   hotstar: "https://help.hotstar.com/in/en/support/solutions/articles/61000278411-How-Do-I-Cancel-My-Subscription-",
-  jiohotstar: "https://help.hotstar.com/in/en/support/solutions/articles/61000278411-How-Do-I-Cancel-My-Subscription-",
-  aha: "https://www.aha.video",
+  jiohotstar: "https://help.hotstar.com/in/en/support/solutions/articles/61000278411-How-Do-I-Cancel-My-Subscription-",  aha: "https://www.aha.video",
   zee5: "https://www.zee5.com/myaccount/subscription",
   sonyliv: "https://www.sonyliv.com/cancelsubscription",
 
