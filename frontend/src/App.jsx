@@ -35,8 +35,15 @@ function AppRoutes() {
       {loading && <Loader />}
       <Toaster
         position="top-right"
-        reverseOrder={false}
-      />
+        toastOptions={{
+          duration: 3000,
+          style: {
+            borderRadius: "10px",
+            background: "#fff",
+            color: "#333",
+          },
+        }}
+/>
       <Routes location={location}>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
