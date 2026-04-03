@@ -11,20 +11,20 @@ import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ChatPage from "./pages/ChatPage"; // Make sure this file exists in /src/pages/
+import ChatPage from "./pages/ChatPage";
 import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
-<Route path="*" element={<NotFound />} />
 function AppRoutes() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
+
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1000); 
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, [location]);
@@ -39,7 +39,7 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/demo" element={<Demo />} />
-      
+
         {/* Protected Routes */}
         <Route
           path="/dashboard"
@@ -85,18 +85,18 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-          <Route path="*" element={<NotFound />} />
+
+        {/* 404 must always be last */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
 }
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <AppRoutes />
     </BrowserRouter>
   );
 }
-
-export default App;
