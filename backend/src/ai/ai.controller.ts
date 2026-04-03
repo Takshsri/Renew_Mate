@@ -81,10 +81,6 @@ if (
       question: "What is the renewal date?",
       inputType: "date",
     },
-    invoiceUrl: {
-      question: "Upload invoice",
-      inputType: "file",
-    },
     notes: {
       question: "Add description",
       inputType: "textarea",
@@ -98,49 +94,55 @@ if (
     "paymentMethod",
     "startDate",
     "renewalDate",
-    "invoiceUrl",
     "notes",
   ];
 
   const draft = body.draft || {};
-
-if (!draft.serviceName && parsed.serviceName) {
-  draft.serviceName = parsed.serviceName;
-}
   let currentStep = body.currentStep || 0;
-  if (body.pendingField) {
+
+  // store service name from first message
+  if (!draft.serviceName && parsed.serviceName) {
+    draft.serviceName = parsed.serviceName;
+  }
+
+  // save current answer
+  if (body.pendingField && body.message) {
     draft[body.pendingField] = body.message;
   }
 
-  if (currentStep < questionFlow.length) {
-    const nextField = questionFlow[currentStep];
+  // all fields collected -> create
+  if (currentStep >= questionFlow.length) {
+    const subscription = await this.subscriptionService.create({
+      serviceName: draft.serviceName,
+      category: draft.category,
+      price: Number(draft.price),
+      billingCycle: draft.billingCycle,
+      paymentMethod: draft.paymentMethod,
+      notes: draft.notes,
+      startDate: new Date(draft.startDate).toISOString(),
+      renewalDate: new Date(draft.renewalDate).toISOString(),
+      userId,
+    });
 
     return {
-      message: fieldMeta[nextField].question,
-      pendingAction: "ADD_SUBSCRIPTION",
-      pendingField: nextField,
-      inputType: fieldMeta[nextField].inputType,
-      currentStep: currentStep + 1,
-      draft,
+      message: `${subscription.serviceName} added successfully ✅`,
+      subscription,
+      pendingAction: null,
+      pendingField: null,
+      currentStep: 0,
+      draft: {},
     };
   }
 
-const subscription = await this.subscriptionService.create({
-  serviceName: draft.serviceName,
-  category: draft.category,
-  price: Number(draft.price),
-  billingCycle: draft.billingCycle,
-  paymentMethod: draft.paymentMethod,
-  invoiceUrl: draft.invoiceUrl,
-  notes: draft.notes,
-  startDate: new Date(draft.startDate).toISOString(),
-  renewalDate: new Date(draft.renewalDate).toISOString(),
-  userId,
-});
+  const nextField = questionFlow[currentStep];
 
   return {
-    message: `${subscription.serviceName} added successfully ✅`,
-    subscription,
+    message: fieldMeta[nextField].question,
+    pendingAction: "ADD_SUBSCRIPTION",
+    pendingField: nextField,
+    inputType: fieldMeta[nextField].inputType,
+    currentStep: currentStep + 1,
+    draft,
   };
 }
     //Show Subscriptions
