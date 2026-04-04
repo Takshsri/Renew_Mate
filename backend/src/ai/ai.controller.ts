@@ -2,8 +2,8 @@ import { Body, Controller, Param, Post, Req, UseGuards,Get } from '@nestjs/commo
 import { AiService } from './ai.service';
 import { SubscriptionsService } from 'src/Subscriptions/subscription.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-//@UseGuards(JwtAuthGuard)
+import { UnauthorizedException } from "@nestjs/common";
+@UseGuards(JwtAuthGuard)
 @Controller('ai')
 export class AiController {
 
@@ -28,7 +28,10 @@ export class AiController {
   @Post('chat')
   async chat(@Req() req, @Body() body: any) {
 
-    const userId = req.user.sub;
+   const userId = req.user?.sub;
+    if (!userId) {
+      throw new UnauthorizedException("Login required");
+    }
     const userMessage = body.message.toLowerCase();
 
     const greetings = ["hi", "hello", "hey", "good morning", "good evening"];
