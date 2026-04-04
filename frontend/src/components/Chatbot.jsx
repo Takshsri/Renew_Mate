@@ -1,10 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-
+import { jwtDecode } from "jwt-decode";
 const BOT_ICON_URL =
   "https://cdn-icons-png.flaticon.com/512/8943/8943377.png";
 
 export default function Chatbot() {
+  const token = localStorage.getItem("token");
+
+let chatStorageKey = "chatHistory_guest";
+
+if (token) {
+  try {
+    const decoded = jwtDecode(token);
+    chatStorageKey = `chatHistory_${decoded.sub}`;
+  } catch {
+    console.error("Invalid token");
+  }
+}
   const [message, setMessage] = useState("");
   const [pendingAction, setPendingAction] = useState(null);
   const [pendingField, setPendingField] = useState(null);
@@ -13,25 +25,26 @@ export default function Chatbot() {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [originalServiceName, setOriginalServiceName] = useState(null);
-  const [chat, setChat] = useState(() => {
-    const saved = localStorage.getItem("chatHistory");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            role: "bot",
-            text: "How can I help you manage your subscriptions today?",
-          },
-        ];
-  });
 
+const [chat, setChat] = useState(() => {
+  const saved = localStorage.getItem(chatStorageKey);
+
+  return saved
+    ? JSON.parse(saved)
+    : [
+        {
+          role: "bot",
+          text: "How can I help you manage your subscriptions today?",
+        },
+      ];
+});
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    localStorage.setItem("chatHistory", JSON.stringify(chat));
+    localStorage.setItem(chatStorageKey, JSON.stringify(chat));
   }, [chat]);
 
   useEffect(() => {
