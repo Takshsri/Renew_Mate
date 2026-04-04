@@ -115,7 +115,7 @@ const handleSubmit = async (e) => {
         <div className="relative">
           <label className={labelStyle}>Category</label>
           <Activity className={iconStyle} />
-          <select name="category" value={form.category} onChange={handleChange} className={`${inputStyle} appearance-none cursor-pointer`}>
+          <select name="category" value={form.category} onChange={handleChange} className={`${inputStyle}  cursor-pointer`}>
             <option value="">Select Category</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Music">Music</option>

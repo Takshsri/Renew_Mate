@@ -154,7 +154,7 @@ const handleSubmit = async (e) => {
             name="category"
             value={form.category}
             onChange={handleChange}
-            className={`${inputStyle} appearance-none`}
+            className={`${inputStyle} `}
           >
             <option value="">Select Category</option>
             <option value="Entertainment">Entertainment</option>
