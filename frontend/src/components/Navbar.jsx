@@ -7,7 +7,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [upcomingRenewals, setUpcomingRenewals] = useState([]);
-
+  const [unreadCount, setUnreadCount] = useState(0);
   const token = localStorage.getItem("token");
 
   let userName = "User";
@@ -35,28 +35,34 @@ export default function Navbar() {
     audio.play();
   };
 
-  const fetchUpcomingRenewals = async (id) => {
-    try {
-      const res = await fetch(
-        `${API_URL}/subscriptions/renewals/upcoming/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = await res.json();
-      setUpcomingRenewals(data);
-      console.log("Renewals:", data);
-
-      if (data.length > 0) {
-        playNotificationSound();
+const fetchUpcomingRenewals = async (id) => {
+  try {
+    const res = await fetch(
+      `${API_URL}/subscriptions/renewals/upcoming/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    } catch (error) {
-      console.error(error);
+    );
+
+    const data = await res.json();
+    setUpcomingRenewals(data);
+
+    const lastSeenCount =
+      Number(localStorage.getItem("seenRenewalsCount")) || 0;
+
+    const newUnread = Math.max(data.length - lastSeenCount, 0);
+    setUnreadCount(newUnread);
+
+    // 🔔 Play only when new unread notifications exist
+    if (newUnread > 0) {
+      playNotificationSound();
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <nav className="w-full bg-white shadow-md">
@@ -75,12 +81,20 @@ export default function Navbar() {
             <div className="relative">
               <Bell
                 className="w-6 h-6 text-gray-700 cursor-pointer"
-                onClick={() =>
-                  setShowNotifications(!showNotifications)
-                }
+                onClick={() => {
+  setShowNotifications(!showNotifications);
+
+  if (!showNotifications) {
+    setUnreadCount(0);
+    localStorage.setItem(
+      "seenRenewalsCount",
+      upcomingRenewals.length
+    );
+  }
+}}
               />
 
-              {upcomingRenewals.length > 0 && (
+              {unreadCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full px-2">
                   {upcomingRenewals.length}
                 </span>
