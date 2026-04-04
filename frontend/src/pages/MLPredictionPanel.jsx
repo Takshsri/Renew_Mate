@@ -39,7 +39,12 @@ export default function MLPredictionPanel() {
         payload
       );
 
-      setPrediction(response.data.prediction);
+     setPrediction({
+  suggestion: response.data.suggestion,
+  message: response.data.message,
+  riskLevel: response.data.risk_level,
+  monthlyEquivalent: response.data.normalized_monthly_spending,
+});
     } catch (err) {
       setError("Prediction failed");
     } finally {
@@ -147,11 +152,40 @@ export default function MLPredictionPanel() {
           {loading ? "Predicting..." : "Predict Renewal"}
         </button>
 
-        {prediction !== null && (
-          <div className="mt-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
-            Renewal Risk Score: <b>{prediction}</b>
-          </div>
-        )}
+       {prediction && (
+  <div className="mt-6 p-5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 space-y-3">
+    <p className="text-lg">
+      <span className="font-bold text-white">Recommended Plan:</span>{" "}
+      <span className="text-cyan-300">{prediction.suggestion}</span>
+    </p>
+
+    <p className="text-lg">
+      <span className="font-bold text-white">Risk Level:</span>{" "}
+      <span
+        className={`px-3 py-1 rounded-full text-sm font-bold ${
+          prediction.riskLevel === "HIGH"
+            ? "bg-red-500/20 text-red-400"
+            : prediction.riskLevel === "MEDIUM"
+            ? "bg-yellow-500/20 text-yellow-400"
+            : "bg-green-500/20 text-green-400"
+        }`}
+      >
+        {prediction.riskLevel}
+      </span>
+    </p>
+
+    <p className="text-lg">
+      <span className="font-bold text-white">
+        Monthly Equivalent Spend:
+      </span>{" "}
+      ₹{prediction.monthlyEquivalent}
+    </p>
+
+    <div className="p-3 rounded-xl bg-white/5 text-slate-200">
+      {prediction.message}
+    </div>
+  </div>
+)}
 
         {error && (
           <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400">

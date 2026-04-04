@@ -233,7 +233,7 @@ export default function NotFound() {
         </p>
 
         <div className="fade4" style={{ display:"flex", gap:20, justifyContent:"center", flexWrap:"wrap" }}>
-          <Link to="/" className="btn-main"><Home size={20} strokeWidth={3} /> REBOOT SYSTEM</Link>
+          <Link to="/" className="btn-main"><Home size={20} strokeWidth={3} /> Back To Home</Link>
           <Link to={isLoggedIn ? "/chat" : "/login"} className="btn-ghost">
             <MessageSquareWarning size={20} />
             {isLoggedIn ? "ASK ASSISTANT" : "LOG IN"}

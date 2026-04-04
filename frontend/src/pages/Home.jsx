@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  BarChart3, 
-  BellDot, 
   ShieldCheck, 
   Zap, 
   ArrowRight,
-  LayoutGrid
+  LayoutGrid,
+  PlayCircle,
+  Sparkles
 } from "lucide-react";
 import logoImage from "../images/dashboard.png";
 
@@ -33,7 +33,7 @@ export default function Home() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
       </div>
 
-      {/* 1. Navbar: Glassmorphic & Sticky */}
+      {/* 1. Navbar */}
       <nav className="sticky top-0 z-50 w-full px-6 py-4 backdrop-blur-md border-b border-white/5">
         <div className="max-w-[1400px] mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -53,71 +53,80 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* 2. Main Hero & Bento Section */}
+      {/* 2. Main Hero & Video Section */}
       <main className="relative z-10 flex-grow flex items-center py-12 md:py-20 px-6">
         <div className="max-w-[1400px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Left: Content */}
+          {/* Left: New Content */}
           <motion.div 
             initial="hidden"
             animate="visible"
             variants={containerVariants}
-            className="lg:col-span-6 xl:col-span-5 space-y-6 md:space-y-8 text-center lg:text-left"
+            className="lg:col-span-5 space-y-6 md:space-y-8 text-center lg:text-left"
           >
-            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-[10px] font-bold uppercase tracking-widest">
-              <Zap size={12} fill="currentColor" /> 
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-fuchsia-500/30 bg-fuchsia-500/10 text-fuchsia-400 text-[10px] font-bold uppercase tracking-widest">
+              <Sparkles size={12} fill="currentColor" /> 
+              The Future of Finance
             </motion.div>
             
             <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl xl:text-8xl font-black tracking-tight leading-[0.95]">
-              Track less.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400 italic">Save More .</span>
+              Master your<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400 italic">Sub-Economy.</span>
             </motion.h1>
             
             <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
-              Automate your financial peace of mind. Manage every subscription in a clean, unified command center.
+              Stop the silent drain on your bank account. RenewMate orchestrates your recurring life, giving you total command over every dollar spent.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-              <Link to="/demo" className="group flex items-center justify-center gap-2 bg-white/5 border border-white/10 px-8 py-4 rounded-2xl text-lg font-black hover:bg-white/10 transition-all">
-                Explore Demo <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+              <Link to="/demo" className="group flex items-center justify-center gap-2 bg-violet-600 px-8 py-4 rounded-2xl text-lg font-black hover:bg-violet-500 shadow-xl shadow-violet-500/20 transition-all">
+                See it in action <ArrowRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>
           </motion.div>
 
-          {/* Right: Bento Grid */}
+          {/* Right: Video Section & About */}
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="lg:col-span-6 xl:col-span-7 grid grid-cols-2 gap-4 h-full"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="lg:col-span-7 space-y-6"
           >
-            {/* Feature 1: The Main Card */}
-            <div className="col-span-2 p-6 md:p-8 bg-gradient-to-br from-white/10 to-transparent border border-white/10 rounded-[2rem] flex flex-col justify-between group hover:border-violet-500/40 transition-colors">
-              <div className="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-violet-400 mb-8">
-                <BarChart3 size={24} />
-              </div>
-              <div>
-                <h3 className="text-2xl font-black mb-2">Visual Dashboard</h3>
-                <p className="text-slate-400 text-sm max-w-sm">A unified timeline of your recurring expenses, updated in real-time.</p>
+            {/* Video Player Mockup */}
+            <div className="relative group rounded-[2.5rem] overflow-hidden border border-white/10 bg-white/5 p-2 backdrop-blur-sm">
+              <div className="aspect-video rounded-[2rem] overflow-hidden relative bg-slate-900">
+                {/* Replace 'your-video-source.mp4' with your actual video path */}
+                <video 
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline 
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
+                >
+                  <source src="/path-to-your-video.mp4" type="video/mp4" />
+                </video>
+                
+                {/* Overlay Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-t from-[#020205] via-transparent to-transparent">
+                  <PlayCircle size={64} className="text-white/50 mb-4 group-hover:scale-110 group-hover:text-white transition-all duration-500 cursor-pointer" />
+                </div>
               </div>
             </div>
 
-            {/* Feature 2: Smart Alerts */}
-            <div className="p-6 md:p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] flex flex-col justify-center items-center text-center group hover:bg-white/[0.06] transition-all">
-              <div className="p-4 bg-orange-500/10 rounded-2xl text-orange-400 mb-4 group-hover:scale-110 transition-transform">
-                <BellDot size={28} />
+            {/* About Card below Video */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
+                <h4 className="font-black text-violet-400 uppercase text-xs tracking-widest mb-2">Our Mission</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  We built RenewMate to simplify the complex world of modern subscriptions, ensuring you only pay for what you actually use.
+                </p>
               </div>
-              <h3 className="font-black text-lg">Smart Alerts</h3>
-              <p className="text-slate-500 text-xs mt-1">Renewal pings before you pay.</p>
-            </div>
-
-            {/* Feature 3: Security */}
-            <div className="p-6 md:p-8 bg-white/[0.03] border border-white/5 rounded-[2rem] flex flex-col justify-center items-center text-center group hover:bg-white/[0.06] transition-all">
-              <div className="p-4 bg-emerald-500/10 rounded-2xl text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
-                <ShieldCheck size={28} />
+              <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
+                <h4 className="font-black text-fuchsia-400 uppercase text-xs tracking-widest mb-2">Why RenewMate?</h4>
+                <p className="text-slate-400 text-sm leading-relaxed">
+                  From intelligent predictive analytics to automated cancellation reminders, we are your financial co-pilot.
+                </p>
               </div>
-              <h3 className="font-black text-lg">Vault Secure</h3>
-              <p className="text-slate-500 text-xs mt-1">Military-grade encryption.</p>
             </div>
           </motion.div>
 

@@ -6,7 +6,7 @@ import os
 
 app = Flask(__name__)
 
-# ✅ CORS FIX
+# ✅ CORS
 CORS(
     app,
     origins=[
@@ -40,22 +40,28 @@ def home():
     }
 
 
-# ✅ IMPORTANT: POST + OPTIONS
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
-    # ✅ Handle preflight request
     if request.method == "OPTIONS":
         return jsonify({"message": "CORS preflight success"}), 200
 
     data = request.json
 
-    monthly_spending = data.get("monthly_spending", 0)
+    monthly_spending = float(data.get("monthly_spending", 0))
     payment_method = data.get("paymentMethod", "manual")
-    active_usage_days = data.get("active_usage_days", 0)
-    days_to_renewal = data.get("days_to_renewal", 0)
+    active_usage_days = int(data.get("active_usage_days", 0))
+    days_to_renewal = int(data.get("days_to_renewal", 0))
+    billing_cycle = data.get("billingCycle", "MONTHLY")
+
+    # ✅ Normalize spend to monthly equivalent
+    normalized_monthly_spending = monthly_spending
+    if billing_cycle == "WEEKLY":
+        normalized_monthly_spending = monthly_spending * 4
+    elif billing_cycle == "YEARLY":
+        normalized_monthly_spending = monthly_spending / 12
 
     auto_renew_risk = 1 if str(payment_method).lower() == "credit_card" else 0
-    over_budget_flag = 1 if monthly_spending > 2000 else 0
+    over_budget_flag = 1 if normalized_monthly_spending > 2000 else 0
 
     features = pd.DataFrame([{
         "monthly_spending": monthly_spending,
@@ -69,7 +75,7 @@ def predict():
         ),
         "billingCycle": encode_value(
             "billingCycle",
-            data.get("billingCycle", "MONTHLY")
+            billing_cycle
         ),
         "paymentMethod": encode_value(
             "paymentMethod",
@@ -85,31 +91,45 @@ def predict():
         "over_budget_flag": over_budget_flag
     }])
 
+    # ✅ ML prediction
     prediction = model.predict(features)[0]
-
     suggestion = encoders["recommended_plan"].inverse_transform(
         [prediction]
     )[0]
 
+    # ✅ Hybrid smart rules override
+    risk_level = "LOW"
     message = "✅ Subscription usage looks healthy."
 
-    if over_budget_flag:
+    if normalized_monthly_spending > 2000 and active_usage_days <= 2:
+        suggestion = "downgrade_plan"
+        risk_level = "HIGH"
         message = (
-            "⚠️ Your monthly subscription expenses are over budget. "
-            "Consider switching to a cheaper plan."
+            "⚠️ High cost with very low usage detected. "
+            "Downgrading or cancelling is recommended."
         )
 
-    if auto_renew_risk and days_to_renewal <= 3:
+    elif over_budget_flag:
+        suggestion = "downgrade_plan"
+        risk_level = "MEDIUM"
         message = (
-            "💳 Credit card auto-renewal is near. "
-            "We recommend reviewing or downgrading this subscription."
+            "⚠️ Your subscription expenses exceed the monthly budget."
+        )
+
+    elif auto_renew_risk and days_to_renewal <= 3:
+        suggestion = "review_plan"
+        risk_level = "MEDIUM"
+        message = (
+            "💳 Auto-renewal is near. Review before renewal."
         )
 
     return jsonify({
         "suggestion": suggestion,
         "message": message,
+        "risk_level": risk_level,
         "auto_renew_risk": auto_renew_risk,
-        "over_budget": bool(over_budget_flag)
+        "over_budget": bool(over_budget_flag),
+        "normalized_monthly_spending": round(normalized_monthly_spending, 2)
     })
 
 
