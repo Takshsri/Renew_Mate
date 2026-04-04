@@ -9,7 +9,7 @@ import {
   Sparkles
 } from "lucide-react";
 import logoImage from "../images/dashboard.png";
-
+import demoVideo from "../assets/demoVideo.mp4";
 export default function Home() {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -98,17 +98,17 @@ export default function Home() {
                 {/* Replace 'your-video-source.mp4' with your actual video path */}
                 <video 
                   autoPlay 
-                  muted 
+                  controls 
                   loop 
                   playsInline 
                   className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity"
                 >
-                  <source src="/path-to-your-video.mp4" type="video/mp4" />
+                  <source src={demoVideo} type="video/mp4" />
                 </video>
                 
                 {/* Overlay Content */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-6 bg-gradient-to-t from-[#020205] via-transparent to-transparent">
-                  <PlayCircle size={64} className="text-white/50 mb-4 group-hover:scale-110 group-hover:text-white transition-all duration-500 cursor-pointer" />
+<div className="absolute inset-0 flex items-center justify-center pointer-events-none">    
+                <PlayCircle size={64} className="text-white/50 mb-4 group-hover:scale-110 group-hover:text-white transition-all duration-500 cursor-pointer" />
                 </div>
               </div>
             </div>
@@ -136,11 +136,7 @@ export default function Home() {
       {/* 3. Stats Footer */}
       <footer className="w-full py-6 px-8 border-t border-white/5 bg-black/20">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex gap-6 md:gap-10 text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">
-            <span className="flex items-center gap-1.5"><ShieldCheck size={12}/> Secure</span>
-            <span className="flex items-center gap-1.5"><LayoutGrid size={12}/> Cloud Sync</span>
-            <span className="flex items-center gap-1.5"><Zap size={12}/> Automated</span>
-          </div>
+          
           <p className="text-[10px] font-bold text-slate-600">© 2026 RENEWMATE. CRAFTED FOR CLARITY.</p>
         </div>
       </footer>
