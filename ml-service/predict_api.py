@@ -1,8 +1,20 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import joblib
 import pandas as pd
 import os
+
 app = Flask(__name__)
+
+# ✅ CORS FIX
+CORS(
+    app,
+    origins=[
+        "http://localhost:5173",
+        "https://renew-mate.vercel.app"
+    ],
+    supports_credentials=True
+)
 
 model = joblib.load("subscription_ai_model.pkl")
 encoders = joblib.load("label_encoders.pkl")
@@ -28,8 +40,13 @@ def home():
     }
 
 
-@app.route("/predict", methods=["POST"])
+# ✅ IMPORTANT: POST + OPTIONS
+@app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
+    # ✅ Handle preflight request
+    if request.method == "OPTIONS":
+        return jsonify({"message": "CORS preflight success"}), 200
+
     data = request.json
 
     monthly_spending = data.get("monthly_spending", 0)
@@ -37,10 +54,7 @@ def predict():
     active_usage_days = data.get("active_usage_days", 0)
     days_to_renewal = data.get("days_to_renewal", 0)
 
-    auto_renew_risk = (
-        1 if str(payment_method).lower() == "credit_card" else 0
-    )
-
+    auto_renew_risk = 1 if str(payment_method).lower() == "credit_card" else 0
     over_budget_flag = 1 if monthly_spending > 2000 else 0
 
     features = pd.DataFrame([{
@@ -77,7 +91,6 @@ def predict():
         [prediction]
     )[0]
 
-    # 💬 smart message generation
     message = "✅ Subscription usage looks healthy."
 
     if over_budget_flag:
@@ -98,8 +111,6 @@ def predict():
         "auto_renew_risk": auto_renew_risk,
         "over_budget": bool(over_budget_flag)
     })
-
-
 
 
 if __name__ == "__main__":
