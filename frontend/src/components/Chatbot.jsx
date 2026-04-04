@@ -168,7 +168,14 @@ setCurrentQuestion(data.message || "");
         botReply += `\n\n${renewals}`;
       }
 
-      setChat((prev) => [...prev, { role: "bot", text: botReply }]);
+      setChat((prev) => [
+      ...prev,
+      {
+        role: "bot",
+        text: botReply,
+        cancelUrl: data.cancelUrl || null,
+      },
+    ]);
       speakResponse(botReply);
     } catch (err) {
       const errorMsg = "Connection error. Please try again.";
@@ -345,7 +352,20 @@ const handleFileUpload = async (file) => {
                   : "bg-gradient-to-br from-cyan-600/10 to-blue-600/10 border-cyan-500/20 text-slate-200 rounded-tl-none"
               } max-w-[80%]`}
             >
-              <div className="whitespace-pre-wrap font-medium">{msg.text}</div>
+<div className="whitespace-pre-wrap font-medium">
+  {msg.text}
+
+  {msg.cancelUrl && (
+    <a
+      href={msg.cancelUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-block mt-3 px-4 py-2 rounded-xl bg-cyan-500 text-black font-bold hover:scale-105 transition"
+    >
+      Open Official Cancellation Page
+    </a>
+  )}
+</div>
             </div>
           </div>
         ))}

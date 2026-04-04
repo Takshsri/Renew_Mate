@@ -240,32 +240,32 @@ const cancelUrls: Record<string, string> = {
 };
 
     // CANCEL SUBSCRIPTION
-if (action === "CANCEL_SUBSCRIPTION") {
-
+    if (action === "CANCEL_SUBSCRIPTION") {
   const subscriptions =
     await this.subscriptionService.findUserSubscriptions(userId);
 
   const sub = subscriptions.find(
-    s => s.serviceName.toLowerCase() === parsed.serviceName?.toLowerCase()
+    (s) =>
+      s.serviceName.toLowerCase() ===
+      parsed.serviceName?.toLowerCase()
   );
 
   if (!sub) {
     return {
-      message: `No ${parsed.serviceName} subscription found in RenewMate.`
+      message: `No ${parsed.serviceName} subscription found in RenewMate.`,
     };
   }
 
-const serviceKey = parsed.serviceName
-  .toLowerCase()
-  .replace(/\s+/g, "");
-  const redirectUrl = cancelUrls[serviceKey];
+  const serviceKey = sub.serviceName
+    .toLowerCase()
+    .replace(/\s+/g, "");
 
   return {
-    message:
-      `To cancel ${parsed.serviceName}, please visit the official cancellation page.`,
-    redirectUrl: redirectUrl || null
+    message: `To cancel ${sub.serviceName}, click below to open the official page.`,
+    cancelUrl: cancelUrls[serviceKey] || null,
   };
-}    // UPCOMING RENEWALS
+}
+//  UPCOMING RENEWALS
     if (action === "UPCOMING_RENEWALS") {
 
       const subscriptions =
