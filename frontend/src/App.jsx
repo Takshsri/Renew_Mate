@@ -16,6 +16,7 @@ import ChatPage from "./pages/ChatPage";
 import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 import EditSubscription from "./pages/EditSubscription";
+import MLPredictionPanel from "./pages/MLPredictionPanel";
 function AppRoutes() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -60,7 +61,7 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
+<Route path="/ml-prediction" element={<MLPredictionPanel />} />
         <Route
           path="/subscriptions"
           element={
