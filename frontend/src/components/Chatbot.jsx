@@ -255,7 +255,7 @@ const handleFileUpload = async (file) => {
           <select
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="flex-1 bg-transparent text-white px-4 text-xl"
+            className="flex-1 bg-transparent text-black px-4 text-xl"
           >
             <option value="">Select billing cycle</option>
             <option value="MONTHLY">Monthly</option>
