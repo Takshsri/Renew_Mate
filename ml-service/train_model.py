@@ -11,22 +11,36 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 def generate_label(row):
-    """
-    Business-rule labels from real Renew Alert data
-    """
-    # 💳 credit card + expensive = cheaper plan
-    if row["auto_renew_risk"] == 1 and row["monthly_spending"] > 1000:
-        return "cheaper_plan"
+    spend = row["monthly_spending"]
+    usage = row["active_usage_days"]
+    days_left = row["days_to_renewal"]
+    auto_risk = row["auto_renew_risk"]
+    over_budget = row["over_budget_flag"]
 
-    # ❌ low usage + costly = cancel
-    if row["active_usage_days"] < 5 and row["monthly_spending"] > 500:
+    # ❌ very low usage + expensive
+    if usage <= 3 and spend > 500:
         return "cancel_subscription"
 
-    # ⚠️ too expensive overall
-    if row["over_budget_flag"] == 1:
-        return "cheaper_plan"
+    # 💸 expensive but still somewhat used
+    if over_budget or spend > 1000:
+        return "downgrade_plan"
+
+    # ⚠️ auto renew soon
+    if auto_risk and days_left <= 5:
+        return "review_plan"
 
     return "same_plan"
+
+
+def normalize_price(row):
+    price = float(row["price"])
+    cycle = str(row["billingCycle"]).upper()
+
+    if cycle == "YEARLY":
+        return price / 12
+    elif cycle == "WEEKLY":
+        return price * 4
+    return price
 
 
 def train_model():
@@ -62,26 +76,26 @@ def train_model():
 
     df["active_usage_days"] = (
         pd.Timestamp.now() - df["createdAt"]
-    ).dt.days
+    ).dt.days.clip(lower=1)
 
-    df["monthly_spending"] = df["price"]
+    # ✅ normalized spend
+    df["monthly_spending"] = df.apply(normalize_price, axis=1)
 
-    # 💳 credit-card auto renew risk
+    # ✅ payment risk
     df["auto_renew_risk"] = df["paymentMethod"].apply(
-        lambda x: 1 if str(x).lower() == "credit_card" else 0
+        lambda x: 1 if "credit" in str(x).lower() else 0
     )
 
-    # 📅 days remaining
+    # ✅ days left
     df["days_to_renewal"] = (
         df["renewalDate"] - pd.Timestamp.now()
     ).dt.days
 
-    # 💸 budget risk
-    total_spend = df["monthly_spending"].sum()
-    budget_limit = 2000
+    # ✅ personalized budget
+    avg_spend = df["monthly_spending"].mean()
 
     df["over_budget_flag"] = df["monthly_spending"].apply(
-        lambda x: 1 if total_spend > budget_limit else 0
+        lambda x: 1 if x > avg_spend * 1.5 else 0
     )
 
     # -------------------------
@@ -134,20 +148,18 @@ def train_model():
     y = df["recommended_plan"]
 
     model = RandomForestClassifier(
-        n_estimators=150,
+        n_estimators=200,
+        max_depth=8,
         random_state=42
     )
 
     model.fit(X, y)
 
-    # 💾 save files
     joblib.dump(model, "subscription_ai_model.pkl")
     joblib.dump(encoders, "label_encoders.pkl")
 
     print("✅ Model trained successfully")
-    print("💾 Saved:")
-    print("   - subscription_ai_model.pkl")
-    print("   - label_encoders.pkl")
+    print("💾 Saved model + encoders")
 
 
 if __name__ == "__main__":

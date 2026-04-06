@@ -6,12 +6,11 @@ import os
 
 app = Flask(__name__)
 
-# ✅ CORS
 CORS(
     app,
     origins=[
         "http://localhost:5173",
-        "https://renew-alert.vercel.app"
+        "https://renew-mate.vercel.app"
     ],
     supports_credentials=True
 )
@@ -53,18 +52,23 @@ def predict():
     days_to_renewal = int(data.get("days_to_renewal", 0))
     billing_cycle = data.get("billingCycle", "MONTHLY")
 
-    # ✅ Normalize spend to monthly equivalent
+    # ✅ normalize spend
     normalized_monthly_spending = monthly_spending
     if billing_cycle == "WEEKLY":
         normalized_monthly_spending = monthly_spending * 4
     elif billing_cycle == "YEARLY":
         normalized_monthly_spending = monthly_spending / 12
 
-    auto_renew_risk = 1 if str(payment_method).lower() == "credit_card" else 0
-    over_budget_flag = 1 if normalized_monthly_spending > 2000 else 0
+    auto_renew_risk = (
+        1 if "credit" in str(payment_method).lower() else 0
+    )
+
+    over_budget_flag = (
+        1 if normalized_monthly_spending > 1500 else 0
+    )
 
     features = pd.DataFrame([{
-        "monthly_spending": monthly_spending,
+        "monthly_spending": normalized_monthly_spending,
         "serviceName": encode_value(
             "serviceName",
             data.get("serviceName", "unknown")
@@ -91,36 +95,37 @@ def predict():
         "over_budget_flag": over_budget_flag
     }])
 
-    # ✅ ML prediction
     prediction = model.predict(features)[0]
     suggestion = encoders["recommended_plan"].inverse_transform(
         [prediction]
     )[0]
 
-    # ✅ Hybrid smart rules override
+    # ✅ hybrid business override
     risk_level = "LOW"
     message = "✅ Subscription usage looks healthy."
 
-    if normalized_monthly_spending > 2000 and active_usage_days <= 2:
-        suggestion = "downgrade_plan"
+    if active_usage_days <= 2 and normalized_monthly_spending > 800:
+        suggestion = "cancel_subscription"
         risk_level = "HIGH"
         message = (
-            "⚠️ High cost with very low usage detected. "
-            "Downgrading or cancelling is recommended."
+            "⚠️ Very low usage with high cost. "
+            "Cancellation recommended."
         )
 
-    elif over_budget_flag:
+    elif active_usage_days <= 5 and normalized_monthly_spending > 500:
         suggestion = "downgrade_plan"
         risk_level = "MEDIUM"
         message = (
-            "⚠️ Your subscription expenses exceed the monthly budget."
+            "💡 Low usage detected. "
+            "Consider switching to a cheaper plan."
         )
 
     elif auto_renew_risk and days_to_renewal <= 3:
         suggestion = "review_plan"
         risk_level = "MEDIUM"
         message = (
-            "💳 Auto-renewal is near. Review before renewal."
+            "💳 Auto-renewal is near. "
+            "Review before renewal."
         )
 
     return jsonify({
@@ -129,7 +134,9 @@ def predict():
         "risk_level": risk_level,
         "auto_renew_risk": auto_renew_risk,
         "over_budget": bool(over_budget_flag),
-        "normalized_monthly_spending": round(normalized_monthly_spending, 2)
+        "normalized_monthly_spending": round(
+            normalized_monthly_spending, 2
+        )
     })
 
 
