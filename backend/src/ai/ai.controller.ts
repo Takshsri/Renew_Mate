@@ -46,22 +46,53 @@ export class AiController {
 let parsed: any = {};
 
 if (!body.pendingAction) {
-  const aiResponse = await this.aiService.extractSubscription(body.message);
+  const lowerMessage = body.message.toLowerCase();
 
-  try {
-    const cleaned = aiResponse
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+  // ✅ manual fallback for add commands
+  const knownServices = [
+    "netflix",
+    "spotify",
+    "jio",
+    "prime",
+    "hotstar",
+    "youtube",
+    "amazon",
+    "zee5",
+    "sonyliv",
+  ];
 
-    parsed = JSON.parse(cleaned);
-  } catch {
-    return {
-      message: aiResponse,
+  const matchedService = knownServices.find((service) =>
+    lowerMessage.includes(service)
+  );
+
+  if (
+    lowerMessage.includes("add") &&
+    lowerMessage.includes("subscription") &&
+    matchedService
+  ) {
+    parsed = {
+      action: "ADD_SUBSCRIPTION",
+      serviceName: matchedService,
     };
+  } else {
+    const aiResponse = await this.aiService.extractSubscription(
+      body.message
+    );
+
+    try {
+      const cleaned = aiResponse
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      parsed = JSON.parse(cleaned);
+    } catch {
+      return {
+        message: aiResponse,
+      };
+    }
   }
 }
-
     const action = parsed.action;
 
 
