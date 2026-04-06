@@ -71,7 +71,7 @@ export default function SubscriptionList({ search = "" }) {
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-cyan-500 anitrack-pulse font-bold uppercase tracking-widest text-xs">
+      <div className="p-8 text-center text-cyan-500 anialert-pulse font-bold uppercase alerting-widest text-xs">
         Fetching Data...
       </div>
     );
@@ -98,7 +98,7 @@ export default function SubscriptionList({ search = "" }) {
           >
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-lg font-bold text-white tracking-tight">
+                <h3 className="text-lg font-bold text-white alerting-tight">
                   {sub.serviceName}
                 </h3>
                 <p className="text-xs text-slate-500">{sub.category}</p>
@@ -106,7 +106,7 @@ export default function SubscriptionList({ search = "" }) {
 
               <div className="flex items-center gap-2">
                 <span
-                  className={`text-[10px] px-2 py-1 rounded border font-black uppercase tracking-tighter ${
+                  className={`text-[10px] px-2 py-1 rounded border font-black uppercase alerting-tighter ${
                     sub.status === "ACTIVE"
                       ? "bg-cyan-500/10 text-cyan-400 border-cyan-500/20"
                       : "bg-red-500/10 text-red-400 border-red-500/20"
@@ -129,7 +129,7 @@ export default function SubscriptionList({ search = "" }) {
                 Price: <span className="text-white">₹{sub.price}</span>
               </p>
 
-              <p className="text-xs text-slate-500 uppercase tracking-wider font-bold">
+              <p className="text-xs text-slate-500 uppercase alerting-wider font-bold">
                 Billing: {sub.billingCycle}
               </p>
 

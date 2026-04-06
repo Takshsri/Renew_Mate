@@ -103,7 +103,10 @@ const [chat, setChat] = useState(() => {
     setIsLoading(true);
 
    try {
-const updatedDraft = pendingField
+const isWizardReply =
+  pendingAction && pendingField;
+
+const updatedDraft = isWizardReply
   ? {
       ...draft,
       [pendingField]: text,
@@ -330,7 +333,7 @@ const handleFileUpload = async (file) => {
           alt="AI"
         />
         <h2 className="text-white text-lg font-bold">
-          RenewTrack <span className="text-cyan-400">AI</span>
+          RenewAlert <span className="text-cyan-400">AI</span>
         </h2>
       </header>
 
@@ -371,8 +374,8 @@ const handleFileUpload = async (file) => {
         ))}
 
         {isLoading && (
-          <div className="text-xs text-cyan-400 anitrack-pulse">
-            RenewTrack AI is thinking...
+          <div className="text-xs text-cyan-400 anialert-pulse">
+            RenewAlert AI is thinking...
           </div>
         )}
       </div>

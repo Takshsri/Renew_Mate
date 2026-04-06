@@ -11,7 +11,7 @@ CORS(
     app,
     origins=[
         "http://localhost:5173",
-        "https://renew-track.vercel.app"
+        "https://renew-alert.vercel.app"
     ],
     supports_credentials=True
 )
@@ -35,7 +35,7 @@ def encode_value(column, value):
 @app.route("/", methods=["GET"])
 def home():
     return {
-        "message": "✅ Renew Track ML API is running",
+        "message": "✅ Renew Alert ML API is running",
         "endpoint": "/predict"
     }
 

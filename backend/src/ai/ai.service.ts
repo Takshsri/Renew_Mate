@@ -18,7 +18,7 @@ export class AiService {
         {
           role: "system",
           content: `
-You are the AI assistant for RenewTrack, a subscription tracking platform.
+You are the AI assistant for RenewAlert, a subscription alerting platform.
 
 Your job is to convert user messages into JSON commands.
 

@@ -7,7 +7,7 @@ CORS(
     app,
     resources={r"/*": {"origins": [
         "http://localhost:5173",
-        "https://renew-track.vercel.app"
+        "https://renew-alert.vercel.app"
     ]}},
     supports_credentials=True
 )

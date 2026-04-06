@@ -117,7 +117,7 @@ const handleSubmit = async (e) => {
   const inputStyle =
     "w-full bg-slate-800/60 border border-white/10 rounded-lg pl-10 pr-4 py-2 text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 transition-all text-sm";
   const labelStyle =
-    "block text-[10px] font-bold text-cyan-500 uppercase tracking-widest mb-1.5 ml-1";
+    "block text-[10px] font-bold text-cyan-500 uppercase alerting-widest mb-1.5 ml-1";
   const iconStyle = "absolute left-3 top-[34px] w-4 h-4 text-slate-400";
 
   return (

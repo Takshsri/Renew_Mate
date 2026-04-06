@@ -45,7 +45,7 @@ export default function Login() {
       <div className="absolute top-6 left-6 z-20">
         <Link 
           to="/" 
-          className="flex items-center gap-2 text-slate-400 hover:text-violet-400 transition-colors text-sm font-bold tracking-tight uppercase"
+          className="flex items-center gap-2 text-slate-400 hover:text-violet-400 transition-colors text-sm font-bold alerting-tight uppercase"
         >
           <ArrowLeft size={16} />
           Back to home
@@ -64,7 +64,7 @@ export default function Login() {
               />
             </div>
           </Link>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-center">
+          <h2 className="text-3xl md:text-4xl font-black alerting-tighter text-center">
             Welcome Back
           </h2>
           <p className="text-slate-500 text-sm mt-2 font-medium">
@@ -78,7 +78,7 @@ export default function Login() {
             
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Email</label>
+              <label className="text-xs font-black uppercase alerting-widest text-slate-400 ml-1">Email</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
                   <Mail size={18} />
@@ -121,7 +121,7 @@ export default function Login() {
             {/* Submit Button */}
             <button 
               type="submit"
-              className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-violet-500 hover:text-white transition-all transform active:scale-[0.98] shadow-xl shadow-white/5 flex items-center justify-center gap-2"
+              className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm uppercase alerting-widest hover:bg-violet-500 hover:text-white transition-all transform active:scale-[0.98] shadow-xl shadow-white/5 flex items-center justify-center gap-2"
             >
               <LogIn size={18} />
               Sign In
@@ -141,8 +141,8 @@ export default function Login() {
 
         {/* Simple Footer Links */}
         <div className="mt-8 flex justify-center gap-6 opacity-40 hover:opacity-100 transition-opacity">
-          <Link to="/privacy" className="text-[10px] font-bold uppercase tracking-widest hover:text-white">Privacy</Link>
-          <Link to="/terms" className="text-[10px] font-bold uppercase tracking-widest hover:text-white">Terms</Link>
+          <Link to="/privacy" className="text-[10px] font-bold uppercase alerting-widest hover:text-white">Privacy</Link>
+          <Link to="/terms" className="text-[10px] font-bold uppercase alerting-widest hover:text-white">Terms</Link>
         </div>
       </div>
     </div>

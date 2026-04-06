@@ -12,7 +12,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 def generate_label(row):
     """
-    Business-rule labels from real Renew Track data
+    Business-rule labels from real Renew Alert data
     """
     # 💳 credit card + expensive = cheaper plan
     if row["auto_renew_risk"] == 1 and row["monthly_spending"] > 1000:

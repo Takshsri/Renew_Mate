@@ -46,7 +46,7 @@ export default function Dashboard() {
 
             {/* Header */}
             <header className="mb-8 mt-14 lg:mt-0 flex justify-between items-center">
-              <h1 className="text-2xl md:text-3xl font-black tracking-tight text-white italic uppercase">
+              <h1 className="text-2xl md:text-3xl font-black alerting-tight text-white italic uppercase">
                 Command <span className="text-cyan-400">Center</span>
               </h1>
             </header>
@@ -61,7 +61,7 @@ export default function Dashboard() {
                 <StatCard label="Monthly Spend" value={`₹${stats.monthlySpending}`} highlight />
               </div>
             ) : (
-              <div className="text-cyan-400 text-xs font-bold anitrack-pulse uppercase tracking-widest">
+              <div className="text-cyan-400 text-xs font-bold anialert-pulse uppercase alerting-widest">
                 Loading Dashboard Data...
               </div>
             )}
@@ -93,12 +93,12 @@ export default function Dashboard() {
           to="/chat"
           className="fixed bottom-8 right-8 z-50 group flex items-center gap-3 transition-transform hover:scale-105"
         >
-          <span className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-2xl">
+          <span className="hidden md:block opacity-0 group-hover:opacity-100 transition-opacity bg-white/10 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase alerting-widest px-4 py-2 rounded-full shadow-2xl">
             Ask AI Assistant
           </span>
 
           <div className="relative">
-            <div className="absolute -inset-2 bg-cyan-500/20 rounded-full blur-xl anitrack-pulse"></div>
+            <div className="absolute -inset-2 bg-cyan-500/20 rounded-full blur-xl anialert-pulse"></div>
 
             <div className="relative bg-[#0d0d12] border border-white/10 p-4 rounded-full shadow-2xl flex items-center justify-center">
               <MessageSquare className="text-cyan-400" size={28} />
@@ -115,7 +115,7 @@ export default function Dashboard() {
 function StatCard({ label, value, highlight }) {
   return (
     <div className="bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
-      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
+      <p className="text-[10px] font-black uppercase alerting-widest text-slate-500 mb-1">
         {label}
       </p>
 

@@ -34,7 +34,7 @@ export default function Subscriptions() {
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
           <h2 className="text-xl font-black text-white italic">
-            RENEW<span className="text-cyan-400">TRACK</span>
+            RENEW<span className="text-cyan-400">ALERT</span>
           </h2>
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -52,10 +52,10 @@ export default function Subscriptions() {
           {/* Header */}
           <div className="mb-10 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-white uppercase italic">
+              <h1 className="text-3xl sm:text-4xl font-black alerting-tighter text-white uppercase italic">
                 Active <span className="text-cyan-400">Vault</span>
               </h1>
-              <p className="text-slate-500 text-[10px] sm:text-xs mt-2 tracking-[0.3em] uppercase font-bold">
+              <p className="text-slate-500 text-[10px] sm:text-xs mt-2 alerting-[0.3em] uppercase font-bold">
                 Direct monitoring of digital assets
               </p>
             </div>

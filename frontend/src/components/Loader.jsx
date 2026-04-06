@@ -11,11 +11,11 @@ export default function Loader() {
         
         {/* The Logo */}
         <div className="logo-wrapper">
-          <img src={logoImage} alt="Renew Track" className="loader-logo" />
+          <img src={logoImage} alt="Renew Alert" className="loader-logo" />
         </div>
       </div>
 
-      <p className="loader-text">Loading Renew Track...</p>
+      <p className="loader-text">Loading Renew Alert...</p>
     </div>
   );
 }

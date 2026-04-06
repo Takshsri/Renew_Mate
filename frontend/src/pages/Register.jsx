@@ -47,7 +47,7 @@ export default function Register() {
       <div className="absolute top-6 left-6 z-20">
         <Link 
           to="/" 
-          className="flex items-center gap-2 text-slate-400 hover:text-violet-400 transition-colors text-sm font-bold tracking-tight uppercase"
+          className="flex items-center gap-2 text-slate-400 hover:text-violet-400 transition-colors text-sm font-bold alerting-tight uppercase"
         >
           <ArrowLeft size={16} />
           <span className="hidden sm:inline">Back to home</span>
@@ -66,7 +66,7 @@ export default function Register() {
               />
             </div>
           </Link>
-          <h2 className="text-3xl md:text-4xl font-black tracking-tighter text-center">
+          <h2 className="text-3xl md:text-4xl font-black alerting-tighter text-center">
             Create Account
           </h2>
           <p className="text-slate-500 text-sm mt-2 font-medium text-center">
@@ -81,7 +81,7 @@ export default function Register() {
             {/* Name Fields Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">First Name</label>
+                <label className="text-[10px] font-black uppercase alerting-widest text-slate-400 ml-1">First Name</label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
                     <User size={16} />
@@ -97,7 +97,7 @@ export default function Register() {
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Last Name</label>
+                <label className="text-[10px] font-black uppercase alerting-widest text-slate-400 ml-1">Last Name</label>
                 <input
                   type="text"
                   required
@@ -111,7 +111,7 @@ export default function Register() {
 
             {/* Email Field */}
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email</label>
+              <label className="text-[10px] font-black uppercase alerting-widest text-slate-400 ml-1">Email</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
                   <Mail size={16} />
@@ -129,7 +129,7 @@ export default function Register() {
 
             {/* Phone Field */}
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number</label>
+              <label className="text-[10px] font-black uppercase alerting-widest text-slate-400 ml-1">Phone Number</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
                   <Phone size={16} />
@@ -147,7 +147,7 @@ export default function Register() {
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Password</label>
+              <label className="text-[10px] font-black uppercase alerting-widest text-slate-400 ml-1">Password</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
                   <Lock size={16} />
@@ -166,7 +166,7 @@ export default function Register() {
             {/* Submit Button */}
             <button 
               type="submit"
-              className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-violet-500 hover:text-white transition-all transform active:scale-[0.98] shadow-xl flex items-center justify-center gap-2 mt-2"
+              className="w-full bg-white text-black py-4 rounded-2xl font-black text-sm uppercase alerting-widest hover:bg-violet-500 hover:text-white transition-all transform active:scale-[0.98] shadow-xl flex items-center justify-center gap-2 mt-2"
             >
               <UserPlus size={18} />
               Get Started
@@ -185,7 +185,7 @@ export default function Register() {
         </div>
 
         {/* Footer Info */}
-        <p className="mt-8 text-center text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+        <p className="mt-8 text-center text-[10px] font-bold text-slate-600 uppercase alerting-widest">
           Secure • Encrypted • Private
         </p>
       </div>

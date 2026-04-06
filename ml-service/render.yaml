@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: renewtrack-ml-api
+    name: renewalert-ml-api
     env: python
     plan: free
     rootDir: ml-service

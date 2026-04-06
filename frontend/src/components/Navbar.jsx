@@ -89,8 +89,8 @@ export default function Navbar() {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <h1 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">
-              RenewTrack <span className="text-blue-600">Dashboard</span>
+            <h1 className="text-lg md:text-xl font-bold text-gray-800 alerting-tight">
+              RenewAlert <span className="text-blue-600">Dashboard</span>
             </h1>
           </div>
 

@@ -90,7 +90,7 @@ export default function Profile() {
         
         {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
-          <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">TRACK</span></h2>
+          <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">ALERT</span></h2>
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 bg-white/5 rounded-lg border border-white/10 text-cyan-400">
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -139,7 +139,7 @@ export default function Profile() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">First Name</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase alerting-[0.2em]">First Name</label>
                       <div className="relative group">
                         <User className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                         <input 
@@ -150,7 +150,7 @@ export default function Profile() {
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Last Name</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase alerting-[0.2em]">Last Name</label>
                       <div className="relative group">
                         <User className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                         <input 
@@ -162,7 +162,7 @@ export default function Profile() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Email Address</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase alerting-[0.2em]">Email Address</label>
                     <div className="relative group">
                       <Mail className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
@@ -173,7 +173,7 @@ export default function Profile() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Phone Number</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase alerting-[0.2em]">Phone Number</label>
                     <div className="relative group">
                       <Phone className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
@@ -184,7 +184,7 @@ export default function Profile() {
                   </div>
 
                   <div className="space-y-2 pb-4">
-                    <label className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Password</label>
+                    <label className="text-[10px] font-bold text-slate-500 uppercase alerting-[0.2em]">Password</label>
                     <div className="relative group">
                       <Lock className="absolute left-3 top-3.5 text-slate-500 group-focus-within:text-cyan-400 transition-colors" size={18} />
                       <input 
@@ -194,7 +194,7 @@ export default function Profile() {
                     </div>
                   </div>
 
-                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black tracking-widest text-xs py-4 rounded-xl shadow-[0_0_20px_rgba(8,145,178,0.2)] transition-all flex items-center justify-center gap-2">
+                  <button className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-black alerting-widest text-xs py-4 rounded-xl shadow-[0_0_20px_rgba(8,145,178,0.2)] transition-all flex items-center justify-center gap-2">
                     <Save size={18} /> UPDATE IDENTITY
                   </button>
                 </form>
