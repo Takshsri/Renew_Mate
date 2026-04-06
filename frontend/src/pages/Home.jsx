@@ -60,7 +60,7 @@ export default function Home() {
           {/* Left: New Content */}
           <motion.div 
             initial="hidden"
-            anitrack="visible"
+            animate="visible"
             variants={containerVariants}
             className="lg:col-span-5 space-y-6 md:space-y-8 text-center lg:text-left"
           >
@@ -88,7 +88,7 @@ export default function Home() {
           {/* Right: Video Section & About */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
-            anitrack={{ opacity: 1, x: 0 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className="lg:col-span-7 space-y-6"
           >
