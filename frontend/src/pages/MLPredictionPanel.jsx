@@ -130,7 +130,7 @@ export default function MLPredictionPanel() {
     placeholder="Active Usage Days"
     value={formData.active_usage_days}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
+    className="p-3 rounded-xl bg-white/100 border border-white/10 text-black"
   />
 
   <input
@@ -139,7 +139,7 @@ export default function MLPredictionPanel() {
     placeholder="Days To Renewal"
     value={formData.days_to_renewal}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
+    className="p-3 rounded-xl bg-white/100 border border-white/10 text-black"
   />
 </div>
        
