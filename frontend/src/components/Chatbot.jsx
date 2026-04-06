@@ -206,6 +206,12 @@ const handleFileUpload = async (file) => {
   );
 
   const data = await res.json();
+  if (
+  data.message?.toLowerCase().includes("success") ||
+  data.message?.toLowerCase().includes("added")
+) {
+  toast.success("Subscription added successfully 🎉");
+}
 
   setMessage(data.url);
 };
