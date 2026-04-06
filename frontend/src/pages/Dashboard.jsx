@@ -66,23 +66,26 @@ export default function Dashboard() {
               </div>
             )}
 
+
             {/* Chart + Subscriptions */}
-            <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl overflow-hidden min-h-[350px]">
-                {stats ? (
-                  <SpendingChart stats={stats} />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-slate-400 text-sm">
-                    Loading chart...
-                  </div>
-                )}
-              </div>
+<div className="space-y-6 pb-24">
+  {/* Chart */}
+  <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl overflow-hidden min-h-[350px]">
+    {stats ? (
+      <SpendingChart stats={stats} />
+    ) : (
+      <div className="flex items-center justify-center h-full text-slate-400 text-sm">
+        Loading chart...
+      </div>
+    )}
+  </div>
 
-              <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl">
-                <SubscriptionList />
-              </div>
-
-            </div>
-          </div>
+  {/* Subscription List */}
+  <div className="bg-white/5 p-4 md:p-6 rounded-3xl border border-white/5 shadow-2xl">
+    <SubscriptionList />
+  </div>
+</div>
+</div>
         </main>
 
         {/* Floating AI Assistant */}
