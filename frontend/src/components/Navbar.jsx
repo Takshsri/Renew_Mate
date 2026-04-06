@@ -71,7 +71,7 @@ const fetchUpcomingRenewals = async (id) => {
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <h1 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">
-              RenewMate <span className="text-blue-600">Dashboard</span>
+              RenewTrack <span className="text-blue-600">Dashboard</span>
             </h1>
           </div>
 

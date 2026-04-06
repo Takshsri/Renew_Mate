@@ -39,7 +39,7 @@ export class AiController {
     if (greetings.includes(userMessage)) {
       return {
         message:
-          "Hello! 👋 I'm RenewMate AI.\nI can help you manage subscriptions.\nTry: 'Add Netflix monthly 499' or 'Show my subscriptions'."
+          "Hello! 👋 I'm RenewTrack AI.\nI can help you manage subscriptions.\nTry: 'Add Netflix monthly 499' or 'Show my subscriptions'."
       };
     }
 
@@ -252,7 +252,7 @@ const cancelUrls: Record<string, string> = {
 
   if (!sub) {
     return {
-      message: `No ${parsed.serviceName} subscription found in RenewMate.`,
+      message: `No ${parsed.serviceName} subscription found in RenewTrack.`,
     };
   }
 

@@ -42,10 +42,10 @@ const navigate = useNavigate();
       {/* Hero */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          RenewMate Demo
+          RenewTrack Demo
         </h1>
         <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto">
-          The ultimate command center for your digital life.
+          The ultitrack command center for your digital life.
         </p>
       </div>
 
@@ -109,7 +109,7 @@ const navigate = useNavigate();
       )}
 
       <p className="mt-12 text-slate-500 text-sm italic">
-        * This is a preview of the RenewMate V2 Dashboard
+        * This is a preview of the RenewTrack V2 Dashboard
       </p>
     </div>
   );

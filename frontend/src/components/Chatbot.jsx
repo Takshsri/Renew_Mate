@@ -330,7 +330,7 @@ const handleFileUpload = async (file) => {
           alt="AI"
         />
         <h2 className="text-white text-lg font-bold">
-          RenewMate <span className="text-cyan-400">AI</span>
+          RenewTrack <span className="text-cyan-400">AI</span>
         </h2>
       </header>
 
@@ -371,8 +371,8 @@ const handleFileUpload = async (file) => {
         ))}
 
         {isLoading && (
-          <div className="text-xs text-cyan-400 animate-pulse">
-            RenewMate AI is thinking...
+          <div className="text-xs text-cyan-400 anitrack-pulse">
+            RenewTrack AI is thinking...
           </div>
         )}
       </div>

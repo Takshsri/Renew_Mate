@@ -61,7 +61,7 @@ export default function Dashboard() {
                 <StatCard label="Monthly Spend" value={`₹${stats.monthlySpending}`} highlight />
               </div>
             ) : (
-              <div className="text-cyan-400 text-xs font-bold animate-pulse uppercase tracking-widest">
+              <div className="text-cyan-400 text-xs font-bold anitrack-pulse uppercase tracking-widest">
                 Loading Dashboard Data...
               </div>
             )}
@@ -91,7 +91,7 @@ export default function Dashboard() {
           </span>
 
           <div className="relative">
-            <div className="absolute -inset-2 bg-cyan-500/20 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute -inset-2 bg-cyan-500/20 rounded-full blur-xl anitrack-pulse"></div>
 
             <div className="relative bg-[#0d0d12] border border-white/10 p-4 rounded-full shadow-2xl flex items-center justify-center">
               <MessageSquare className="text-cyan-400" size={28} />

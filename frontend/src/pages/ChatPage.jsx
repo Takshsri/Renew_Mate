@@ -32,7 +32,7 @@ export default function ChatPage() {
         
         {/* Mobile Toggle (Hidden on Desktop) */}
         <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
-          <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">MATE</span></h2>
+          <h2 className="text-xl font-black text-white italic">RENEW<span className="text-cyan-400">TRACK</span></h2>
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 bg-white/5 rounded-lg border border-white/10 text-cyan-400">
             {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>

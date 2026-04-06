@@ -2,40 +2,41 @@ import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import SubscriptionList from "../components/SubscriptionList";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 
 export default function Subscriptions() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   return (
     <div className="flex min-h-screen bg-[#050508] text-slate-200 font-sans">
-      
-      {/* 1. Sidebar - FIXED WIDTH WRAPPER */}
-      <div className={`
+      {/* Sidebar */}
+      <div
+        className={`
         fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ease-in-out
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:static lg:block lg:w-64 lg:flex-shrink-0
-      `}>
+      `}
+      >
         <Sidebar />
       </div>
 
       {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* 2. Main Content Area */}
+      {/* Main */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        
-        {/* Mobile Header (Only visible on small screens) */}
+        {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between p-4 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur-md sticky top-0 z-30">
           <h2 className="text-xl font-black text-white italic">
-            RENEW<span className="text-cyan-400">MATE</span>
+            RENEW<span className="text-cyan-400">TRACK</span>
           </h2>
-          <button 
+          <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 bg-white/5 rounded-lg border border-white/10 text-cyan-400"
           >
@@ -43,16 +44,12 @@ export default function Subscriptions() {
           </button>
         </div>
 
-        {/* Global Navbar */}
         <Navbar />
 
-        {/* Main Scrollable Area */}
         <main className="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-10 relative">
-          
-          {/* Decorative Glow */}
           <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-cyan-500/5 blur-[120px] rounded-full pointer-events-none" />
 
-          {/* Page Header */}
+          {/* Header */}
           <div className="mb-10 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl sm:text-4xl font-black tracking-tighter text-white uppercase italic">
@@ -62,16 +59,28 @@ export default function Subscriptions() {
                 Direct monitoring of digital assets
               </p>
             </div>
-
-            
           </div>
 
-          {/* Subscription List Container */}
+          {/* Search Bar */}
+          <div className="relative z-10 mb-6">
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+              size={18}
+            />
+            <input
+              type="text"
+              placeholder="Search subscriptions..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#0f0f14] border border-white/10 rounded-2xl pl-12 pr-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-cyan-400/40"
+            />
+          </div>
+
+          {/* Subscription List */}
           <div className="relative z-10">
-              <SubscriptionList />
+            <SubscriptionList search={search} />
           </div>
 
-          {/* Spacer for bottom */}
           <div className="h-20" />
         </main>
       </div>

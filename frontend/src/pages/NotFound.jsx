@@ -228,7 +228,7 @@ export default function NotFound() {
         </h2>
 
         <p className="fade3" style={{ fontSize:17, color:"#94a3b8", lineHeight:1.6, maxWidth:460, margin:"0 auto 48px", fontWeight:400 }}>
-          RenewMate AI couldn't find that frequency. <br/>
+          RenewTrack AI couldn't find that frequency. <br/>
           <strong>Stay calm</strong> — we’re recalculating your position.
         </p>
 

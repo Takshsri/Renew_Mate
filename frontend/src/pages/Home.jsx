@@ -29,7 +29,7 @@ export default function Home() {
       
       {/* Dynamic Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-violet-600/15 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute top-[-10%] left-[-10%] w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-violet-600/15 blur-[120px] rounded-full anitrack-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-600/10 blur-[120px] rounded-full" />
       </div>
 
@@ -41,7 +41,7 @@ export default function Home() {
               <img src={logoImage} alt="Logo" className="w-7 h-7 object-cover rounded-md" />
             </div>
             <span className="text-xl md:text-2xl font-black tracking-tighter bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-              RenewMate
+              RenewTrack
             </span>
           </div>
           <div className="flex items-center gap-4 md:gap-8">
@@ -60,7 +60,7 @@ export default function Home() {
           {/* Left: New Content */}
           <motion.div 
             initial="hidden"
-            animate="visible"
+            anitrack="visible"
             variants={containerVariants}
             className="lg:col-span-5 space-y-6 md:space-y-8 text-center lg:text-left"
           >
@@ -75,7 +75,7 @@ export default function Home() {
             </motion.h1>
             
             <motion.p variants={itemVariants} className="text-lg md:text-xl text-slate-400 leading-relaxed max-w-lg mx-auto lg:mx-0 font-medium">
-              Stop the silent drain on your bank account. RenewMate orchestrates your recurring life, giving you total command over every dollar spent.
+              Stop the silent drain on your bank account. RenewTrack orchestrates your recurring life, giving you total command over every dollar spent.
             </motion.p>
 
             <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
@@ -88,7 +88,7 @@ export default function Home() {
           {/* Right: Video Section & About */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
+            anitrack={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className="lg:col-span-7 space-y-6"
           >
@@ -118,13 +118,13 @@ export default function Home() {
               <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
                 <h4 className="font-black text-violet-400 uppercase text-xs tracking-widest mb-2">Our Mission</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  We built RenewMate to simplify the complex world of modern subscriptions, ensuring you only pay for what you actually use.
+                  We built RenewTrack to simplify the complex world of modern subscriptions, ensuring you only pay for what you actually use.
                 </p>
               </div>
               <div className="p-6 rounded-3xl bg-white/[0.03] border border-white/5">
-                <h4 className="font-black text-fuchsia-400 uppercase text-xs tracking-widest mb-2">Why RenewMate?</h4>
+                <h4 className="font-black text-fuchsia-400 uppercase text-xs tracking-widest mb-2">Why RenewTrack?</h4>
                 <p className="text-slate-400 text-sm leading-relaxed">
-                  From intelligent predictive analytics to automated cancellation reminders, we are your financial co-pilot.
+                  From intelligent predictive analytics to autotrackd cancellation reminders, we are your financial co-pilot.
                 </p>
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function Home() {
       <footer className="w-full py-6 px-8 border-t border-white/5 bg-black/20">
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           
-          <p className="text-[10px] font-bold text-slate-600">© 2026 RENEWMATE. CRAFTED FOR CLARITY.</p>
+          <p className="text-[10px] font-bold text-slate-600">© 2026 RENEWTRACK. CRAFTED FOR CLARITY.</p>
         </div>
       </footer>
     </div>

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: renewmate-ml-api
+    name: renewtrack-ml-api
     env: python
     plan: free
     rootDir: ml-service

@@ -63,7 +63,7 @@ export default function Sidebar() {
         <Link to="/" className="flex items-center gap-3 mb-10 px-2">
           <img src={logoImage} alt="Logo" className="w-8 h-8" />
           <h2 className="text-lg font-black text-white">
-            Renew<span className="text-cyan-400">Mate</span>
+            Renew<span className="text-cyan-400">Track</span>
           </h2>
         </Link>
 
