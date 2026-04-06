@@ -72,7 +72,7 @@ export default function MLPredictionPanel() {
     name="category"
     value={formData.category}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10"
+    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
   >
     <option value="">Select Category</option>
     <option value="Entertainment">Entertainment</option>
@@ -86,7 +86,7 @@ export default function MLPredictionPanel() {
     name="billingCycle"
     value={formData.billingCycle}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10"
+    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
   >
     <option value="MONTHLY">MONTHLY</option>
     <option value="WEEKLY">WEEKLY</option>
@@ -98,7 +98,7 @@ export default function MLPredictionPanel() {
     name="paymentMethod"
     value={formData.paymentMethod}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10"
+    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
   >
     <option value="credit_card">Credit Card</option>
     <option value="upi">UPI</option>
@@ -109,7 +109,7 @@ export default function MLPredictionPanel() {
     name="status"
     value={formData.status}
     onChange={handleChange}
-    className="p-3 rounded-xl bg-white/10 border border-white/10"
+    className="p-3 rounded-xl bg-white/10 border border-white/10 text-black"
   >
     <option value="ACTIVE">ACTIVE</option>
     <option value="CANCELLED">CANCELLED</option>
