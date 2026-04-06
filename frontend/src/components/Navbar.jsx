@@ -105,7 +105,7 @@ export default function Navbar() {
 
               {/* ✅ show unread count only */}
               {unreadCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full px-2">
+                <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-Black rounded-full px-2">
                   {unreadCount}
                 </span>
               )}
@@ -117,7 +117,7 @@ export default function Navbar() {
                   </div>
 
                   {upcomingRenewals.length === 0 ? (
-                    <p className="p-4 text-sm text-gray-500">
+                    <p className="p-4 text-sm text-black-500">
                       No renewals soon
                     </p>
                   ) : (
