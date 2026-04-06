@@ -3,66 +3,85 @@ import { jwtDecode } from "jwt-decode";
 import { Menu, X, Bell } from "lucide-react";
 import { API_URL } from "../api/api";
 import notificationSound from "../assets/notification.mp3";
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [upcomingRenewals, setUpcomingRenewals] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+
   const token = localStorage.getItem("token");
 
   let userName = "User";
-  let userId = null;
 
   if (token) {
     try {
       const decoded = jwtDecode(token);
       userName = decoded.firstName || "User";
-      userId = decoded.sub;
     } catch (e) {
       console.error("Invalid token");
     }
   }
-
-  useEffect(() => {
-    if (userId) {
-      fetchUpcomingRenewals(userId);
-      
-    }
-  }, [userId]);
 
   const playNotificationSound = () => {
     const audio = new Audio(notificationSound);
     audio.play();
   };
 
-const fetchUpcomingRenewals = async (id) => {
-  try {
-    const res = await fetch(
-      `${API_URL}/subscriptions/renewals/upcoming/${id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+  const fetchUpcomingRenewals = async () => {
+    try {
+      const res = await fetch(
+        `${API_URL}/subscriptions/renewals/upcoming`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      const renewalsArray = Array.isArray(data) ? data : [];
+
+      setUpcomingRenewals(renewalsArray);
+
+      const lastSeenCount =
+        Number(localStorage.getItem("seenRenewalsCount")) || 0;
+
+      const newUnread = Math.max(
+        renewalsArray.length - lastSeenCount,
+        0
+      );
+
+      setUnreadCount(newUnread);
+
+      if (newUnread > 0) {
+        playNotificationSound();
       }
-    );
-
-    const data = await res.json();
-    setUpcomingRenewals(data);
-
-    const lastSeenCount =
-      Number(localStorage.getItem("seenRenewalsCount")) || 0;
-
-    const newUnread = Math.max(data.length - lastSeenCount, 0);
-    setUnreadCount(newUnread);
-
-    // 🔔 Play only when new unread notifications exist
-    if (newUnread > 0) {
-      playNotificationSound();
+    } catch (error) {
+      console.error("Renewals fetch error:", error);
+      setUpcomingRenewals([]);
     }
-  } catch (error) {
-    console.error(error);
-  }
-};
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchUpcomingRenewals();
+    }
+  }, [token]);
+
+  const handleNotificationClick = () => {
+    const newShowState = !showNotifications;
+    setShowNotifications(newShowState);
+
+    // ✅ clear unread immediately when opened
+    if (!showNotifications) {
+      setUnreadCount(0);
+      localStorage.setItem(
+        "seenRenewalsCount",
+        upcomingRenewals.length.toString()
+      );
+    }
+  };
 
   return (
     <nav className="w-full bg-white shadow-md">
@@ -75,28 +94,19 @@ const fetchUpcomingRenewals = async (id) => {
             </h1>
           </div>
 
-          {/* Right Side */}
+          {/* Desktop Right */}
           <div className="hidden md:flex items-center gap-6">
             {/* Notifications */}
             <div className="relative">
               <Bell
                 className="w-6 h-6 text-gray-700 cursor-pointer"
-                onClick={() => {
-  setShowNotifications(!showNotifications);
-
-  if (!showNotifications) {
-    setUnreadCount(0);
-    localStorage.setItem(
-      "seenRenewalsCount",
-      upcomingRenewals.length
-    );
-  }
-}}
+                onClick={handleNotificationClick}
               />
 
+              {/* ✅ show unread count only */}
               {unreadCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white rounded-full px-2">
-                  {upcomingRenewals.length}
+                  {unreadCount}
                 </span>
               )}
 

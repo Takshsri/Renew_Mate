@@ -391,7 +391,7 @@ const handleFileUpload = async (file) => {
           Renewals
         </button>
         <button
-          onClick={() => sendMessage("Cancel my Netflix")}
+          onClick={() => sendMessage("Cancel my Netflixx")}
           className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10"
         >
           Cancel
