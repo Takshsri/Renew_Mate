@@ -52,32 +52,20 @@ if (renewalDate < today) {
     });
 
   }
-async findOne(id: string) {
-  const subscription = await this.prisma.subscription.findUnique({
-    where: { id },
+async findOne(id: string, userId: string) {
+  const subscription = await this.prisma.subscription.findFirst({
+    where: {
+      id,
+      userId,
+    },
   });
-   if (!subscription) {
+
+  if (!subscription) {
     throw new NotFoundException("Subscription not found");
   }
 
   return subscription;
 }
-  async findAll() {
-
-    return this.prisma.subscription.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true
-          }
-        }
-      }
-    });
-
-  }
 
 async findUserSubscriptions(userId: string) {
 
@@ -102,19 +90,34 @@ async findUserSubscriptions(userId: string) {
 
   return updatedSubscriptions;
 }
-  async remove(id: string) {
+ async remove(id: string, userId: string) {
+  const subscription = await this.prisma.subscription.findFirst({
+    where: { id, userId },
+  });
 
-    return this.prisma.subscription.delete({
-      where: { id }
-    });
-
+  if (!subscription) {
+    throw new NotFoundException("Subscription not found");
   }
+
+  return this.prisma.subscription.delete({
+    where: { id },
+  });
+}
 
 async update(
   id: string,
+  userId: string,
   dto: UpdateSubscriptionDto,
   invoiceUrl?: string,
 ) {
+  const subscription = await this.prisma.subscription.findFirst({
+    where: { id, userId },
+  });
+
+  if (!subscription) {
+    throw new NotFoundException("Subscription not found");
+  }
+
   return this.prisma.subscription.update({
     where: { id },
     data: {

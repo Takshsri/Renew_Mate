@@ -37,23 +37,21 @@ let invoiceUrl: string | undefined;
     invoiceUrl
   );  }
 
-  @Get()
-  findAll() {
-    return this.subscriptionsService.findAll();
-  }
-@Get(':id')
-findOne(@Param('id') id: string) {
-  return this.subscriptionsService.findOne(id);
-}
-  @Get('user/:userId')
-findUserSubscriptions(@Param('userId') userId: string) {
+ @Get()
+findAll(@Req() req: any) {
+  const userId = req.user.sub;
   return this.subscriptionsService.findUserSubscriptions(userId);
 }
+@Get(':id')
+findOne(@Param('id') id: string, @Req() req: any) {
+  return this.subscriptionsService.findOne(id, req.user.sub);
+}
+  
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subscriptionsService.remove(id);
-  }
+remove(@Param('id') id: string, @Req() req: any) {
+  return this.subscriptionsService.remove(id, req.user.sub);
+}
 
 @Patch(':id')
 @UseInterceptors(FileInterceptor('invoice'))
@@ -61,6 +59,7 @@ async update(
   @Param('id') id: string,
   @UploadedFile() file: any,
   @Body() updateSubscriptionDto: UpdateSubscriptionDto,
+  @Req() req: any,
 ) {
   let invoiceUrl: string | undefined;
 
@@ -71,13 +70,13 @@ async update(
 
   return this.subscriptionsService.update(
     id,
+    req.user.sub,
     updateSubscriptionDto,
     invoiceUrl,
   );
-}
-//renewals
-@Get("renewals/upcoming/:userId")
-getUpcomingRenewals(@Param("userId") userId: string) {
-  return this.subscriptionsService.getUpcomingRenewals(userId);
+}//renewals
+@Get("renewals/upcoming")
+getUpcomingRenewals(@Req() req: any) {
+  return this.subscriptionsService.getUpcomingRenewals(req.user.sub);
 }
 }
