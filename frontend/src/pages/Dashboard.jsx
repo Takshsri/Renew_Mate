@@ -56,7 +56,7 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                 <StatCard label="Total" value={stats.totalSubscriptions} />
                 <StatCard label="Active" value={stats.activeSubscriptions} />
-                <StatCard label="Expired" value={stats.expiredSubscriptions || 0} />
+                <StatCard label="Expired" value={stats.expiredSubscriptions} />
                 <StatCard label="Upcoming" value={stats.upcomingRenewals} />
                 <StatCard label="Monthly Spend" value={`₹${stats.monthlySpending}`} highlight />
               </div>

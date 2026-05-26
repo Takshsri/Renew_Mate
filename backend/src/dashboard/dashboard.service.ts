@@ -14,14 +14,17 @@ export class DashboardService {
   });
 
   const totalSubscriptions = subscriptions.length;
+  const today = new Date();
 
-  const activeSubscriptions = subscriptions.filter(
-    sub => sub.status === "ACTIVE"
-  ).length;
+const activeSubscriptions = subscriptions.filter(sub => {
+  const renewalDate = new Date(sub.renewalDate);
+  return renewalDate >= today;
+}).length;
 
-  const expiredSubscriptions = subscriptions.filter(
-    sub => sub.status === "EXPIRED"
-  ).length;
+const expiredSubscriptions = subscriptions.filter(sub => {
+  const renewalDate = new Date(sub.renewalDate);
+  return renewalDate < today;
+}).length;
 
   const monthlySpending = subscriptions
     .filter(sub => sub.billingCycle === "MONTHLY")
@@ -33,7 +36,7 @@ export class DashboardService {
 const weeklySpending = subscriptions
   .filter(sub => sub.billingCycle === "WEEKLY")
   .reduce((sum, sub) => sum + sub.price, 0);
-  const today = new Date();
+
 
   const nextWeek = new Date();
   nextWeek.setDate(today.getDate() + 7);
